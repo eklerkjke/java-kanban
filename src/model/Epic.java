@@ -1,9 +1,17 @@
-import java.util.ArrayList;
-import java.util.Arrays;
+package model;
 
+import constans.TaskStatus;
+import java.util.ArrayList;
+
+/**
+ * Класс, отвечающий за работу эпиков
+ */
 public class Epic extends Task {
 
-    protected ArrayList<SubTask> subTasks = new ArrayList<>();
+    /**
+     * Список подзадач
+     */
+    private ArrayList<SubTask> subTasks = new ArrayList<>();
 
     @Override
     public String toString() {
@@ -19,7 +27,10 @@ public class Epic extends Task {
         updateStatus();
     }
 
-    protected void updateStatus() {
+    /**
+     * Метод расчета статуса эпика
+     */
+    public void updateStatus() {
         ArrayList<SubTask> tasks = getSubTasks();
         if (tasks.isEmpty()) {
             status = TaskStatus.NEW;
@@ -42,14 +53,26 @@ public class Epic extends Task {
         }
     }
 
+    /**
+     * Вовзращает все подзадачи
+     * @return подзадачи
+     */
     public ArrayList<SubTask> getSubTasks() {
         return subTasks;
     }
 
+    /**
+     * Добавляет подзадачу в эписк
+     * @param task подзадача
+     */
     public void addSubTask(SubTask task) {
         subTasks.add(task);
     }
 
+    /**
+     * Удаляет подзадачу в эпике по ID
+     * @param subTaskId ID подзадачи
+     */
     public void removeSubTask(int subTaskId) {
         for (SubTask task : getSubTasks()) {
             if (task.getId() == subTaskId) {

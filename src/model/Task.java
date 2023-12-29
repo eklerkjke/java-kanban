@@ -1,42 +1,92 @@
+package model;
+
+import constans.TaskStatus;
 import java.util.Objects;
 
+/**
+ * Класс отвечающий за работу обычной задачи
+ */
 public class Task {
+    /**
+     * Название задачи
+     */
     protected String name;
 
+    /**
+     * Описание задачи
+     */
     protected String description;
 
+    /**
+     * ID задачи
+     */
     protected int id;
 
+    /**
+     * Статус задачи
+     */
     protected TaskStatus status;
 
+    /**
+     * Возвращает название задачи
+     * @return название задачи
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Задает название задачи
+     * @param name название задачи
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Возвращает описание задачи
+     * @return описание задачи
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Задает описание задачи
+     * @param description описание задачи
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Вовзрашает ID задачи
+     * @return ID задачи
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Задает ID задачи
+     * @param id ID задачи
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Возвращает статус задачи
+     * @return статус задачи
+     */
     public TaskStatus getStatus() {
         return status;
     }
 
+    /**
+     * Задает статус задачи
+     * @param status статус задачи
+     */
     public void setStatus(TaskStatus status) {
         this.status = status;
     }

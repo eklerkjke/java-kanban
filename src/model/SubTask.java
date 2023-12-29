@@ -1,16 +1,37 @@
+package model;
+
+import constans.TaskStatus;
 import java.util.Objects;
 
+/**
+ * Класс, отвечающий за работу подзадач
+ */
 public class SubTask extends Task {
+    /**
+     * Родительский эпик, к которому принадлежит подзадача
+     */
     private Epic parent;
 
+    /**
+     * Возвращает ID родительского эпика
+     * @return ID родительского эпика
+     */
     public int getParentId() {
         return parent.getId();
     }
 
+    /**
+     * Возвращает родительский эпик
+     * @return родительский эпик
+     */
     public Epic getParent() {
         return parent;
     }
 
+    /**
+     * Задает родительский эпик
+     * @param parent родительский эпик
+     */
     public void setParent(Epic parent) {
         this.parent = parent;
     }
@@ -18,8 +39,7 @@ public class SubTask extends Task {
     @Override
     public void setStatus(TaskStatus status) {
         super.setStatus(status);
-        Epic epic = (Epic)TaskManager.getTaskById(getParentId());
-        epic.updateStatus();
+        parent.updateStatus();
     }
 
     @Override
