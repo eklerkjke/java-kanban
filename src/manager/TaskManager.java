@@ -84,52 +84,42 @@ public class TaskManager {
 
     /**
      * Добавляет подзадачу в внутренний список
-     * @param epicId ID эпика
      * @param subTask подзадача
-     * @throws Exception исключение, если найден эпик по ID
      */
-    public void addSubTask(int epicId, SubTask subTask) throws Exception {
-        Epic epic = getEpicById(epicId);
-        if (epic == null) {
-            throw new Exception("Ошибка создания подзадачи. Не найден эпик по ID = " + epicId);
-        }
-
+    public void addSubTask(SubTask subTask) {
+        Epic epic = subTask.getParent();
         subTask.setId(getNextTaskId());
-        subTask.setParent(epic);
         epic.addSubTask(subTask);
-        epic.updateStatus();
 
         subTaskList.put(subTask.getId(), subTask);
     }
 
     /**
      * Обновление задачи
-     * @param id ID задачи для обноление
      * @param task Новая модель задачи
      */
-    public void updateTask(int id, Task task) {
-        task.setId(id);
-        taskList.put(id, task);
+    public void updateTask(Task task) {
+        taskList.remove(task.getId());
+        taskList.put(task.getId(), task);
     }
 
     /**
      * Обновление подзадачи
-     * @param id ID подзадачи
      * @param subTask новая модель подзадачи
      */
-    public void updateSubTask(int id, SubTask subTask) {
-        subTask.setId(id);
-        subTaskList.put(id, subTask);
+    public void updateSubTask(SubTask subTask) {
+        subTaskList.remove(subTask.getId());
+        subTaskList.put(subTask.getId(), subTask);
+        subTask.getParent().updateStatus();
     }
 
     /**
      * Обновление эпика
-     * @param id ID эпика
      * @param epic новая модель эпика
      */
-    public void updateEpic(int id, Epic epic) {
-        epic.setId(id);
-        epicList.put(id, epic);
+    public void updateEpic(Epic epic) {
+        epicList.remove(epic.getId());
+        epicList.put(epic.getId(), epic);
     }
 
     /**
@@ -209,8 +199,29 @@ public class TaskManager {
      * Удаление всех задач
      */
     public void removeAll() {
+        removeTasks();
+        removeEpics();
+    }
+
+    /**
+     * Удаление всех задач
+     */
+    public void removeTasks() {
         taskList.clear();
+    }
+
+    /**
+     * Удаление всех подзадач
+     */
+    public void removeSubTasks() {
         subTaskList.clear();
+    }
+
+    /**
+     * Удаление всех эпиков
+     */
+    public void removeEpics() {
+        removeSubTasks();
         epicList.clear();
     }
 }

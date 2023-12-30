@@ -13,6 +13,10 @@ public class Epic extends Task {
      */
     private ArrayList<SubTask> subTasks = new ArrayList<>();
 
+    public Epic(String name, String description) {
+        super(name, description, TaskStatus.NEW);
+    }
+
     @Override
     public String toString() {
         return "Эпик: " +
@@ -67,6 +71,7 @@ public class Epic extends Task {
      */
     public void addSubTask(SubTask task) {
         subTasks.add(task);
+        updateStatus();
     }
 
     /**
@@ -77,6 +82,7 @@ public class Epic extends Task {
         for (SubTask task : getSubTasks()) {
             if (task.getId() == subTaskId) {
                 subTasks.remove(task);
+                updateStatus();
             }
         }
     }

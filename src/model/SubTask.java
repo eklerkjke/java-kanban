@@ -12,6 +12,11 @@ public class SubTask extends Task {
      */
     private Epic parent;
 
+    public SubTask(String name, String description, TaskStatus status, Epic epic) {
+        super(name, description, status);
+        this.parent = epic;
+    }
+
     /**
      * Возвращает ID родительского эпика
      * @return ID родительского эпика

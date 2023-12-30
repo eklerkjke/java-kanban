@@ -21,51 +21,29 @@ public class Main {
         TaskManager manager = new TaskManager();
 
         // Создание задач
-        Task firstTask = new Task();
-        firstTask.setName("Задача 1");
-        firstTask.setDescription("Описание 1");
-        firstTask.setStatus(TaskStatus.NEW);
+        Task firstTask = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
 
-        Task secondTask = new Task();
-        secondTask.setName("Задача 2");
-        secondTask.setDescription("Описание 2");
-        secondTask.setStatus(TaskStatus.IN_PROGRESS);
+        Task secondTask = new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS);
 
-        Epic firstEpic = new Epic();
-        firstEpic.setName("Эпик 1");
-        firstEpic.setDescription("Описание Эпика 1");
+        Epic firstEpic = new Epic("Эпик 1", "Описание Эпика 1");
 
-        Epic secondEpic = new Epic();
-        secondEpic.setName("Эпик 2");
-        secondEpic.setDescription("Описание Эпика 2");
+        Epic secondEpic = new Epic("Эпик 2", "Описание Эпика 2");
 
-        SubTask firstSubTask = new SubTask();
-        firstSubTask.setName("Подзадача 1");
-        firstSubTask.setDescription("Описание 1");
-        firstSubTask.setParent(firstEpic);
-        firstSubTask.setStatus(TaskStatus.IN_PROGRESS);
+        SubTask firstSubTask = new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, firstEpic);
 
-        SubTask secondSubTask = new SubTask();
-        secondSubTask.setName("Подзадача 2");
-        secondSubTask.setDescription("Описание 2");
-        secondSubTask.setParent(firstEpic);
-        secondSubTask.setStatus(TaskStatus.NEW);
+        SubTask secondSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, firstEpic);
 
-        SubTask thirtSubTask = new SubTask();
-        thirtSubTask.setName("Подзадача 2");
-        thirtSubTask.setDescription("Описание 2");
-        thirtSubTask.setParent(secondEpic);
-        thirtSubTask.setStatus(TaskStatus.IN_PROGRESS);
+        SubTask thirtSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, secondEpic);
 
         manager.addTask(firstTask);
         manager.addTask(secondTask);
 
         manager.addEpic(firstEpic);
-        manager.addSubTask(firstEpic.getId(), firstSubTask);
-        manager.addSubTask(firstEpic.getId(), secondSubTask);
+        manager.addSubTask(firstSubTask);
+        manager.addSubTask(secondSubTask);
 
         manager.addEpic(secondEpic);
-        manager.addSubTask(secondEpic.getId(), thirtSubTask);
+        manager.addSubTask(thirtSubTask);
 
         // печать
         print(manager);

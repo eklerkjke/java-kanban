@@ -27,6 +27,12 @@ public class Task {
      */
     protected TaskStatus status;
 
+    public Task(String name, String description, TaskStatus status) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
+    
     /**
      * Возвращает название задачи
      * @return название задачи
