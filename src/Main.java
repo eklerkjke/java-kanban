@@ -3,6 +3,7 @@ import manager.TaskManager;
 import model.Epic;
 import model.SubTask;
 import model.Task;
+import provider.ProviderManager;
 
 /**
  * Интрефейс взаимодействия
@@ -18,7 +19,7 @@ public class Main {
         System.out.println("Поехали!");
 
         // Инициализируем менеджер
-        TaskManager manager = new TaskManager();
+        TaskManager<Task, SubTask, Epic> manager = ProviderManager.getTaskManager();
 
         // Создание задач
         Task firstTask = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
@@ -68,15 +69,27 @@ public class Main {
      * Вывод в консоль всех задач
      * @param manager менеджер задач
      */
-    public static void print(TaskManager manager) {
+    private static void print(TaskManager<Task, SubTask, Epic> manager) throws Exception {
+        System.out.println("Задачи:");
         for (Task task : manager.getTaskList()) {
             System.out.println(task);
         }
-        for (Epic epic : manager.getEpicList()) {
+        System.out.println("Эпики:");
+        for (Task epic : manager.getEpicList()) {
             System.out.println(epic);
+
+            for (Task task : manager.getSubTasksEpic(epic.getId())) {
+                System.out.println("--> " + task);
+            }
         }
-        for (SubTask subTask : manager.getSubTaskList()) {
-            System.out.println(subTask);
+        System.out.println("Подзадачи:");
+        for (Task subtask : manager.getSubTaskList()) {
+            System.out.println(subtask);
+        }
+
+        System.out.println("История:");
+        for (Task task : manager.getHistory()) {
+            System.out.println(task);
         }
     }
 }

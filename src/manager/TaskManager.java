@@ -3,225 +3,49 @@ package manager;
 import model.Epic;
 import model.SubTask;
 import model.Task;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
-/**
- * Класс отвечающий за работу с задачами
- */
-public class TaskManager {
+public interface TaskManager <T extends Task, S extends SubTask, E extends Epic> {
+    ArrayList<T> getTaskList();
 
-    /**
-     * Внутренний счетчик для ID задач
-     */
-    private int idTasks = 0;
+    ArrayList<S> getSubTaskList();
 
-    /**
-     * Список обычных задач
-     */
-    private HashMap<Integer, Task> taskList = new HashMap<>();
+    ArrayList<E> getEpicList();
 
-    /**
-     * Список подзадач
-     */
-    private HashMap<Integer, SubTask> subTaskList = new HashMap<>();
+    void addTask(T task);
 
-    /**
-     * Список эпиков
-     */
-    private HashMap<Integer, Epic> epicList = new HashMap<>();
+    void addEpic(E epic);
 
-    /**
-     * Возвращает инкрементированный ID задачи
-     * @return ID задачи
-     */
-    private int getNextTaskId() {
-        ++idTasks;
-        return idTasks;
-    }
+    void addSubTask(S subTask);
 
-    /**
-     * Возвращает список обычных задач
-     * @return список обычных задач
-     */
-    public ArrayList<Task> getTaskList() {
-        return new ArrayList<>(taskList.values());
-    }
+    void updateTask(T task);
 
-    /**
-     * Возвращает список подзадач
-     * @return список подзадач
-     */
-    public ArrayList<SubTask> getSubTaskList() {
-        return new ArrayList<>(subTaskList.values());
-    }
+    void updateSubTask(S subTask);
 
-    /**
-     * Возвращает список эпиков
-     * @return список эпиков
-     */
-    public ArrayList<Epic> getEpicList() {
-        return new ArrayList<>(epicList.values());
-    }
+    void updateEpic(E epic);
 
-    /**
-     * Добавляет задачу в внутренний список
-     * @param task задача
-     */
-    public void addTask(Task task) {
-        task.setId(getNextTaskId());
-        taskList.put(task.getId(), task);
-    }
+    T getTaskById(int id);
 
-    /**
-     * Добавляет эпик в внутренний список
-     * @param epic эпик
-     */
-    public void addEpic(Epic epic) {
-        epic.setId(getNextTaskId());
-        epicList.put(epic.getId(), epic);
-    }
+    S getSubTaskById(int id);
 
-    /**
-     * Добавляет подзадачу в внутренний список
-     * @param subTask подзадача
-     */
-    public void addSubTask(SubTask subTask) {
-        Epic epic = subTask.getParent();
-        subTask.setId(getNextTaskId());
-        epic.addSubTask(subTask);
+    E getEpicById(int id);
 
-        subTaskList.put(subTask.getId(), subTask);
-    }
+    ArrayList<S> getSubTasksEpic(int epicId) throws Exception;
 
-    /**
-     * Обновление задачи
-     * @param task Новая модель задачи
-     */
-    public void updateTask(Task task) {
-        taskList.remove(task.getId());
-        taskList.put(task.getId(), task);
-    }
+    void removeTaskById(Integer id);
 
-    /**
-     * Обновление подзадачи
-     * @param subTask новая модель подзадачи
-     */
-    public void updateSubTask(SubTask subTask) {
-        subTaskList.remove(subTask.getId());
-        subTaskList.put(subTask.getId(), subTask);
-        subTask.getParent().updateStatus();
-    }
+    void removeSubTaskById(Integer id);
 
-    /**
-     * Обновление эпика
-     * @param epic новая модель эпика
-     */
-    public void updateEpic(Epic epic) {
-        epicList.remove(epic.getId());
-        epicList.put(epic.getId(), epic);
-    }
+    void removeEpicById(Integer id);
 
-    /**
-     * Вовзращает задачу по ID
-     * @param id ID задачи
-     * @return задача
-     */
-    public Task getTaskById(int id) {
-        return taskList.get(id);
-    }
+    void removeAll();
 
-    /**
-     * Возвращает подзадачу по ID
-     * @param id ID подзадачи
-     * @return подзадача
-     */
-    public SubTask getSubTaskById(int id) {
-        return subTaskList.get(id);
-    }
+    void removeTasks();
 
-    /**
-     * Возвращает эпик по ID
-     * @param id ID эпика
-     * @return эпик
-     */
-    public Epic getEpicById(int id) {
-        return epicList.get(id);
-    }
+    void removeSubTasks();
 
-    /**
-     * Возвращает список подзадач эпика
-     * @param epicId ID эпика
-     * @return список подзадач эпика
-     * @throws Exception исключение, если эпик не найден
-     */
-    public ArrayList<SubTask> getSubTasksEpic(int epicId) throws Exception {
-        Epic epic = getEpicById(epicId);
-        if (epic == null) {
-            throw new Exception("Ошибка. Не найден эпик по ID = " + epicId);
-        }
+    void removeEpics();
 
-        return epic.getSubTasks();
-    }
-
-    /**
-     * Удаление задачи по ID
-     * @param id ID задачи
-     */
-    public void removeTaskById(Integer id) {
-        taskList.remove(id);
-    }
-
-    /**
-     * Удаление подзадачи по ID
-     * @param id ID подздачи
-     */
-    public void removeSubTaskById(Integer id) {
-        SubTask subTask = getSubTaskById(id);
-        Epic epic = subTask.getParent();
-        epic.removeSubTask(id);
-        subTaskList.remove(id);
-    }
-
-    /**
-     * Удаление эпика по ID
-     * @param id ID эпика
-     */
-    public void removeEpicById(Integer id) {
-        Epic epic = getEpicById(id);
-        for (SubTask subTask : epic.getSubTasks()) {
-            removeSubTaskById(subTask.getId());
-        }
-        epicList.remove(id);
-    }
-
-    /**
-     * Удаление всех задач
-     */
-    public void removeAll() {
-        removeTasks();
-        removeEpics();
-    }
-
-    /**
-     * Удаление всех задач
-     */
-    public void removeTasks() {
-        taskList.clear();
-    }
-
-    /**
-     * Удаление всех подзадач
-     */
-    public void removeSubTasks() {
-        subTaskList.clear();
-    }
-
-    /**
-     * Удаление всех эпиков
-     */
-    public void removeEpics() {
-        removeSubTasks();
-        epicList.clear();
-    }
+    ArrayList<T> getHistory();
 }
