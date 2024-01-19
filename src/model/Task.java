@@ -6,7 +6,7 @@ import java.util.Objects;
 /**
  * Класс отвечающий за работу обычной задачи
  */
-public class Task {
+public class Task implements BaseTask {
     /**
      * Название задачи
      */

@@ -1,51 +1,146 @@
 package manager;
 
+import model.BaseTask;
 import model.Epic;
 import model.SubTask;
 import model.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public interface TaskManager <T extends Task, S extends SubTask, E extends Epic> {
-    ArrayList<T> getTaskList();
+/**
+ * Интерфейс для работы с менеджерами задач
+ */
+public interface TaskManager {
+    /**
+     * Должен возвращать список задач
+     * @return список задач
+     */
+    ArrayList<Task> getTaskList();
 
-    ArrayList<S> getSubTaskList();
+    /**
+     * Возвращает список подзадач
+     * @return список подзадач
+     */
+    ArrayList<SubTask> getSubTaskList();
 
-    ArrayList<E> getEpicList();
+    /**
+     * Возвращает список эпиков
+     * @return список эпиков
+     */
+    ArrayList<Epic> getEpicList();
 
-    void addTask(T task);
+    /**
+     * Добавляет задачу в внутренний список
+     * @param task задача
+     */
+    void addTask(Task task);
 
-    void addEpic(E epic);
+    /**
+     * Добавляет эпик в внутренний список
+     * @param epic эпик
+     */
+    void addEpic(Epic epic);
 
-    void addSubTask(S subTask);
+    /**
+     * Добавляет подзадачу в внутренний список
+     * @param subTask подзадача
+     */
+    void addSubTask(SubTask subTask);
 
-    void updateTask(T task);
+    /**
+     * Обновление задачи
+     * @param task Новая модель задачи
+     */
+    void updateTask(Task task);
 
-    void updateSubTask(S subTask);
+    /**
+     * Обновление подзадачи
+     * @param subTask новая модель подзадачи
+     */
+    void updateSubTask(SubTask subTask);
 
-    void updateEpic(E epic);
+    /**
+     * Обновление эпика
+     * @param epic новая модель эпика
+     */
+    void updateEpic(Epic epic);
 
-    T getTaskById(int id);
+    /**
+     * Вовзращает задачу по ID
+     * @param id ID задачи
+     * @return задача
+     */
+    Task getTaskById(int id);
 
-    S getSubTaskById(int id);
+    /**
+     * Возвращает подзадачу по ID
+     * @param id ID подзадачи
+     * @return подзадача
+     */
+    SubTask getSubTaskById(int id);
 
-    E getEpicById(int id);
+    /**
+     * Возвращает эпик по ID
+     * @param id ID эпика
+     * @return эпик
+     */
+    Epic getEpicById(int id);
 
-    ArrayList<S> getSubTasksEpic(int epicId) throws Exception;
+    /**
+     * Возвращает список подзадач эпика
+     * @param epicId ID эпика
+     * @return список подзадач эпика
+     * @throws Exception исключение, если эпик не найден
+     */
+    List<SubTask> getSubTasksEpic(int epicId) throws Exception;
 
+    /**
+     * Удаление задачи по ID
+     * @param id ID задачи
+     */
     void removeTaskById(Integer id);
 
+    /**
+     * Удаление подзадачи по ID
+     * @param id ID подздачи
+     */
     void removeSubTaskById(Integer id);
 
+    /**
+     * Удаление эпика по ID
+     * @param id ID эпика
+     */
     void removeEpicById(Integer id);
 
+    /**
+     * Удаление всех задач
+     */
     void removeAll();
 
+    /**
+     * Удаление всех задач
+     */
     void removeTasks();
 
+    /**
+     * Удаление всех подзадач
+     */
     void removeSubTasks();
 
+    /**
+     * Удаление всех эпиков
+     */
     void removeEpics();
 
-    ArrayList<T> getHistory();
+    /**
+     * Возвращает список задач в истории
+     * @return список задач в истории
+     */
+    List<BaseTask> getHistory();
+
+    /**
+     * Очистка истории
+     */
+    void clearHistory();
 }

@@ -1,24 +1,24 @@
 package manager;
 
 import constans.TaskStatus;
+import model.BaseTask;
 import model.Epic;
 import model.SubTask;
 import model.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import provider.ProviderManager;
-
-import java.util.ArrayList;
+import provider.Managers;
+import java.util.List;
 
 class TaskManagerTest {
 
-    public static TaskManager<Task, SubTask, Epic> taskManager;
+    public static TaskManager taskManager;
 
     @BeforeAll
     static void setUpTestManager() {
         // Инициализируем менеджер
-        TaskManager<Task, SubTask, Epic> manager = ProviderManager.getTaskManager();
+        TaskManager manager = Managers.getTaskManager();
 
         Epic firstEpic = new Epic("Эпик 1", "Описание Эпика 1");
         Epic secondEpic = new Epic("Эпик 2", "Описание Эпика 2");
@@ -34,6 +34,8 @@ class TaskManagerTest {
 
         manager.addEpic(secondEpic);
         manager.addSubTask(thirtSubTask);
+
+        manager.clearHistory();
 
         taskManager = manager;
     }
@@ -123,14 +125,21 @@ class TaskManagerTest {
     void getHistory() {
         setUpTestManager();
 
-        taskManager.getTaskById(1);
-        taskManager.getTaskById(2);
-        taskManager.getTaskById(3);
-        taskManager.getEpicById(3);
+        Task task1 = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
+        Task task2 = new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS);
+        Epic epic = new Epic("Эпик 1", "Описание Эпика 1");
 
-        ArrayList<Task> history = taskManager.getHistory();
 
-        System.out.println(history);
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        taskManager.addEpic(epic);
+
+        taskManager.getTaskById(task1.getId());
+        taskManager.getTaskById(task2.getId());
+        taskManager.getTaskById(999);
+        taskManager.getEpicById(epic.getId());
+
+        List<BaseTask> history = taskManager.getHistory();
 
         Assertions.assertEquals(3, history.size(), "Не верное количество записей в истории");
     }

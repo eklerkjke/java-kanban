@@ -2,6 +2,7 @@ package model;
 
 import constans.TaskStatus;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс, отвечающий за работу эпиков
@@ -11,7 +12,7 @@ public class Epic extends Task {
     /**
      * Список подзадач
      */
-    private ArrayList<SubTask> subTasks = new ArrayList<>();
+    private List<SubTask> subTasks = new ArrayList<>();
 
     public Epic(String name, String description) {
         super(name, description, TaskStatus.NEW);
@@ -35,7 +36,7 @@ public class Epic extends Task {
      * Метод расчета статуса эпика
      */
     public void updateStatus() {
-        ArrayList<SubTask> tasks = getSubTasks();
+        List<SubTask> tasks = getSubTasks();
         if (tasks.isEmpty()) {
             status = TaskStatus.NEW;
             return;
@@ -61,7 +62,7 @@ public class Epic extends Task {
      * Вовзращает все подзадачи
      * @return подзадачи
      */
-    public ArrayList<SubTask> getSubTasks() {
+    public List<SubTask> getSubTasks() {
         return subTasks;
     }
 

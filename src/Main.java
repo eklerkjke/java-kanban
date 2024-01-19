@@ -1,9 +1,10 @@
 import constans.TaskStatus;
 import manager.TaskManager;
+import model.BaseTask;
 import model.Epic;
 import model.SubTask;
 import model.Task;
-import provider.ProviderManager;
+import provider.Managers;
 
 /**
  * Интрефейс взаимодействия
@@ -19,7 +20,7 @@ public class Main {
         System.out.println("Поехали!");
 
         // Инициализируем менеджер
-        TaskManager<Task, SubTask, Epic> manager = ProviderManager.getTaskManager();
+        TaskManager manager = Managers.getTaskManager();
 
         // Создание задач
         Task firstTask = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
@@ -69,7 +70,7 @@ public class Main {
      * Вывод в консоль всех задач
      * @param manager менеджер задач
      */
-    private static void print(TaskManager<Task, SubTask, Epic> manager) throws Exception {
+    private static void print(TaskManager manager) throws Exception {
         System.out.println("Задачи:");
         for (Task task : manager.getTaskList()) {
             System.out.println(task);
@@ -88,7 +89,7 @@ public class Main {
         }
 
         System.out.println("История:");
-        for (Task task : manager.getHistory()) {
+        for (BaseTask task : manager.getHistory()) {
             System.out.println(task);
         }
     }

@@ -1,24 +1,38 @@
 package history;
 
-import model.Task;
+import model.BaseTask;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class InMemoryTaskHistoryManager implements TaskHistoryManager<Task> {
+public class InMemoryTaskHistoryManager implements TaskHistoryManager {
 
-    private ArrayList<Task> historyList = new ArrayList<>();
+    private ArrayList<BaseTask> historyList = new ArrayList<>();
 
 
     @Override
-    public void add(Task task) {
-        if (historyList.size() >= 10) {
+    public void add(BaseTask task) {
+        if (task.getId() <= 0) {
+            return;
+        }
+
+        if (historyList.size() >= MAX_VALUE) {
             historyList.removeFirst();
         }
 
         historyList.add(task);
     }
 
-    public ArrayList<Task> getHistory() {
-        return historyList;
+    @Override
+    public List<BaseTask> getHistory() {
+        return List.copyOf(historyList);
+    }
+
+    /**
+     * Очистка истории
+     */
+    @Override
+    public void clearHistory() {
+        historyList.clear();
     }
 }
