@@ -1,11 +1,9 @@
 package manager;
 
-import model.BaseTask;
 import model.Epic;
 import model.SubTask;
 import model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,19 +14,19 @@ public interface TaskManager {
      * Должен возвращать список задач
      * @return список задач
      */
-    ArrayList<Task> getTaskList();
+    List<Task> getTaskList();
 
     /**
      * Возвращает список подзадач
      * @return список подзадач
      */
-    ArrayList<SubTask> getSubTaskList();
+    List<SubTask> getSubTaskList();
 
     /**
      * Возвращает список эпиков
      * @return список эпиков
      */
-    ArrayList<Epic> getEpicList();
+    List<Epic> getEpicList();
 
     /**
      * Добавляет задачу в внутренний список
@@ -137,10 +135,5 @@ public interface TaskManager {
      * Возвращает список задач в истории
      * @return список задач в истории
      */
-    List<BaseTask> getHistory();
-
-    /**
-     * Очистка истории
-     */
-    void clearHistory();
+    List<Task> getHistory();
 }

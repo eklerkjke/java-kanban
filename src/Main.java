@@ -1,6 +1,5 @@
 import constans.TaskStatus;
 import manager.TaskManager;
-import model.BaseTask;
 import model.Epic;
 import model.SubTask;
 import model.Task;
@@ -20,7 +19,7 @@ public class Main {
         System.out.println("Поехали!");
 
         // Инициализируем менеджер
-        TaskManager manager = Managers.getTaskManager();
+        TaskManager manager = Managers.getDefault();
 
         // Создание задач
         Task firstTask = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
@@ -89,7 +88,7 @@ public class Main {
         }
 
         System.out.println("История:");
-        for (BaseTask task : manager.getHistory()) {
+        for (Task task : manager.getHistory()) {
             System.out.println(task);
         }
     }

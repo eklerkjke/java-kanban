@@ -1,18 +1,31 @@
 package history;
 
-import model.BaseTask;
+import manager.TaskManager;
+import model.Task;
+import provider.Managers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryTaskHistoryManager implements TaskHistoryManager {
+    /**
+     * Константа, обозначает максимальное количество задач в списке истории
+     */
+    private final int MAX_VALUE = 10;
 
-    private ArrayList<BaseTask> historyList = new ArrayList<>();
-
+    private List<Task> historyList = new ArrayList<>();
 
     @Override
-    public void add(BaseTask task) {
+    public void add(TaskManager manager, Task task) {
         if (task.getId() <= 0) {
+            return;
+        }
+
+        if (
+            !manager.getTaskList().contains(task)
+            && !manager.getEpicList().contains(task)
+            && !manager.getSubTaskList().contains(task)
+        ) {
             return;
         }
 
@@ -24,15 +37,7 @@ public class InMemoryTaskHistoryManager implements TaskHistoryManager {
     }
 
     @Override
-    public List<BaseTask> getHistory() {
+    public List<Task> getHistory() {
         return List.copyOf(historyList);
-    }
-
-    /**
-     * Очистка истории
-     */
-    @Override
-    public void clearHistory() {
-        historyList.clear();
     }
 }
