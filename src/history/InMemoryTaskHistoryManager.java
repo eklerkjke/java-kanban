@@ -21,16 +21,12 @@ public class InMemoryTaskHistoryManager implements TaskHistoryManager {
             return;
         }
 
-        if (
-            !manager.getTaskList().contains(task)
-            && !manager.getEpicList().contains(task)
-            && !manager.getSubTaskList().contains(task)
-        ) {
-            return;
-        }
-
         if (historyList.size() >= MAX_VALUE) {
-            historyList.removeFirst();
+            // for JDK 21
+            // historyList.removeFirst();
+
+            // for JDK 11
+            historyList.remove(0);
         }
 
         historyList.add(task);

@@ -22,19 +22,19 @@ public class InMemoryTaskManager implements TaskManager {
     /**
      * Список обычных задач
      */
-    private Map<Integer, Task> taskList = new HashMap<>();
+    final private Map<Integer, Task> taskList = new HashMap<>();
 
     /**
      * Список подзадач
      */
-    private Map<Integer, SubTask> subTaskList = new HashMap<>();
+    final private Map<Integer, SubTask> subTaskList = new HashMap<>();
 
     /**
      * Список эпиков
      */
-    private Map<Integer, Epic> epicList = new HashMap<>();
+    final private Map<Integer, Epic> epicList = new HashMap<>();
 
-    private TaskHistoryManager historyManager;
+    final private TaskHistoryManager historyManager;
 
     public InMemoryTaskManager(TaskHistoryManager historyManager) {
         this.historyManager = historyManager;

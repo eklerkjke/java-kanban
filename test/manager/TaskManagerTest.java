@@ -167,7 +167,7 @@ class TaskManagerTest {
     @Test
     void tasksEqualsById() {
         Task task1 = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
-        Task task2 = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
+        Task task2 = new Task("Задача 2", "Описание 2", TaskStatus.IN_PROGRESS);
 
         task1.setId(1);
         task2.setId(1);
@@ -175,7 +175,7 @@ class TaskManagerTest {
         Assertions.assertEquals(task1, task2, "Задачи с одинаковым ID не равны");
 
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
-        Epic epic2 = new Epic("Эпик 1", "Описание 1");
+        Epic epic2 = new Epic("Эпик 2", "Описание 2");
 
         epic1.setId(1);
         epic2.setId(1);
@@ -183,7 +183,7 @@ class TaskManagerTest {
         Assertions.assertEquals(epic1, epic2, "Эпики с одинаковым ID не равны");
 
         SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1);
-        SubTask subTask2 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1);
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.DONE, epic1);
 
         subTask1.setId(1);
         subTask2.setId(1);

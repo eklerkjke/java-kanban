@@ -8,7 +8,12 @@ import manager.TaskManager;
 /**
  * Утилитарный класс для работы с менеджерами
  */
-public class Managers {
+final public class Managers {
+
+    private Managers() {
+
+    }
+
     /**
      * Возвращает менеджер задач по умолчанию
      * @return менеджер задач
