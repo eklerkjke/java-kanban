@@ -16,6 +16,8 @@ public interface TaskHistoryManager {
      */
     void add(TaskManager manager, Task task);
 
+    void remove(int id);
+
     /**
      * Возвращает список задач в истории
      * @return список задач истории
