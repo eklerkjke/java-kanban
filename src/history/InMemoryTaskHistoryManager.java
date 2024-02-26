@@ -47,12 +47,18 @@ public class InMemoryTaskHistoryManager implements TaskHistoryManager {
         Node<Task> next = node.getNext();
         Node<Task> prev = node.getPrev();
 
-        if (prev != null) {
-            next.setPrev(prev);
-        }
-
-        if (next != null) {
+        if (prev == null && next == null) {
+            head = null;
+            tail = null;
+        } else if (prev == null) {
+            head = next;
+            next.setPrev(null);
+        } else if (next == null) {
+            tail = prev;
+            prev.setNext(null);
+        } else {
             prev.setNext(next);
+            next.setPrev(prev);
         }
     }
 
