@@ -9,13 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskHistoryManager implements TaskHistoryManager {
-    /**
-     * Константа, обозначает максимальное количество задач в списке истории
-     */
-    private final int MAX_VALUE = 10;
 
     private Map<Integer, Node<Task>> historyMap = new HashMap<>();
-
 
     private Node<Task> head;
     private Node<Task> tail;
@@ -24,10 +19,6 @@ public class InMemoryTaskHistoryManager implements TaskHistoryManager {
     @Override
     public void add(TaskManager manager, Task task) {
         if (task.getId() <= 0) {
-            return;
-        }
-
-        if (size >= MAX_VALUE) {
             return;
         }
 
@@ -49,43 +40,43 @@ public class InMemoryTaskHistoryManager implements TaskHistoryManager {
     }
 
     private void removeNode(Node<Task> node) {
-        Task task = node.data;
+        Task task = node.getData();
         historyMap.get(task.getId());
 
         historyMap.remove(task.getId());
-        Node<Task> next = node.next;
-        Node<Task> prev = node.prev;
+        Node<Task> next = node.getNext();
+        Node<Task> prev = node.getPrev();
 
         if (prev != null) {
-            next.prev = prev;
+            next.setPrev(prev);
         }
 
         if (next != null) {
-            prev.next = next;
+            prev.setNext(next);
         }
     }
 
     private void linkLast(Node<Task> node) {
         Node<Task> oldTail = tail;
-        node.prev = oldTail;
+        node.setPrev(oldTail);
         if (oldTail == null) {
             head = node;
         } else {
-            oldTail.next = node;
+            oldTail.setNext(node);
         }
 
         tail = node;
 
-        historyMap.put(node.data.getId(), node);
+        historyMap.put(node.getData().getId(), node);
 
         size++;
     }
 
-    public ArrayList<Task> getTasks() {
-        ArrayList<Task> list = new ArrayList<>();
+    public List<Task> getTasks() {
+        List<Task> list = new ArrayList<>();
 
         for (Map.Entry<Integer, Node<Task>> entry : historyMap.entrySet()) {
-            list.add(entry.getValue().data);
+            list.add(entry.getValue().getData());
         }
 
         return list;
