@@ -12,6 +12,9 @@ import provider.Managers;
 
 import java.util.List;
 
+/**
+ * Класс для тестирования менеджера задач
+ */
 class TaskManagerTest {
 
     private TaskManager taskManager;
@@ -163,6 +166,7 @@ class TaskManagerTest {
         Assertions.assertInstanceOf(TaskHistoryManager.class, history, "Менеджер истории задач имеет не корректный интерфейс");
     }
 
+    @Test
     void subTaskShouldUpdateId() {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
         SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1);
@@ -182,6 +186,7 @@ class TaskManagerTest {
         Assertions.assertNotEquals(subTaskId, subTask1.getId(), "ID подзадачи не изменился!");
     }
 
+    @Test
     void shouldNotUpdateFieldsByDirectSetters() {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
         SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1);

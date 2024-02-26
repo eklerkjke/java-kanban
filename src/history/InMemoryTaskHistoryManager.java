@@ -8,14 +8,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Класс отвечающий за хранение истории задач
+ */
 public class InMemoryTaskHistoryManager implements TaskHistoryManager {
 
-    private Map<Integer, Node<Task>> historyMap = new HashMap<>();
+    /**
+     * Свойство для хранения задач
+     */
+    final private Map<Integer, Node<Task>> historyMap = new HashMap<>();
 
+    /**
+     * Свойство "головы" истории задач
+     */
     private Node<Task> head;
-    private Node<Task> tail;
-    private int size = 0;
 
+    /**
+     * Свойство "хвоста" истории задач
+     */
+    private Node<Task> tail;
+
+    /**
+     * Добавления записи в историю
+     * @param manager Менеджер задач
+     * @param task задача
+     */
     @Override
     public void add(TaskManager manager, Task task) {
         if (task.getId() <= 0) {
@@ -30,15 +47,22 @@ public class InMemoryTaskHistoryManager implements TaskHistoryManager {
         linkLast(node);
     }
 
+    /**
+     * Удаления записи из истории
+     * @param id ID задачи
+     */
     @Override
     public void remove(int id) {
         Node<Task> node = historyMap.get(id);
         if (node != null) {
             removeNode(node);
-            --size;
         }
     }
 
+    /**
+     * Удаление ноды из мапы
+     * @param node
+     */
     private void removeNode(Node<Task> node) {
         Task task = node.getData();
         historyMap.get(task.getId());
@@ -62,6 +86,10 @@ public class InMemoryTaskHistoryManager implements TaskHistoryManager {
         }
     }
 
+    /**
+     * Добавление ноды в конец списка
+     * @param node
+     */
     private void linkLast(Node<Task> node) {
         Node<Task> oldTail = tail;
         node.setPrev(oldTail);
@@ -74,10 +102,12 @@ public class InMemoryTaskHistoryManager implements TaskHistoryManager {
         tail = node;
 
         historyMap.put(node.getData().getId(), node);
-
-        size++;
     }
 
+    /**
+     * Возвращает список задач в истории из мапы
+     * @return список истории задач
+     */
     public List<Task> getTasks() {
         List<Task> list = new ArrayList<>();
 
@@ -88,6 +118,10 @@ public class InMemoryTaskHistoryManager implements TaskHistoryManager {
         return list;
     }
 
+    /**
+     * Вовзвращает список истории задач
+     * @return список истории задач
+     */
     @Override
     public List<Task> getHistory() {
         return List.copyOf(getTasks());
