@@ -12,6 +12,9 @@ import provider.Managers;
 
 import java.util.List;
 
+/**
+ * Класс для тестирования менеджера задач
+ */
 class TaskManagerTest {
 
     private TaskManager taskManager;
@@ -119,52 +122,6 @@ class TaskManagerTest {
     }
 
     @Test
-    void getHistory() {
-        Task task1 = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
-        Task task2 = new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS);
-        Epic epic = new Epic("Эпик 1", "Описание Эпика 1");
-
-        taskManager.addTask(task1);
-        taskManager.addTask(task2);
-        taskManager.addEpic(epic);
-
-        taskManager.getTaskById(task1.getId());
-        taskManager.getTaskById(task2.getId());
-        taskManager.getTaskById(999);
-        taskManager.getEpicById(epic.getId());
-
-        List<Task> history = taskManager.getHistory();
-
-        Assertions.assertEquals(3, history.size(), "Не верное количество записей в истории");
-    }
-
-    @Test
-    void getHistoryWithMoreThen10Tasks() {
-        Task[] arrayTasks = {
-            new Task("Задача 1", "Описание 1", TaskStatus.NEW),
-            new Task("Задача 2", "Описание 2", TaskStatus.NEW),
-            new Task("Задача 3", "Описание 3", TaskStatus.NEW),
-            new Task("Задача 4", "Описание 4", TaskStatus.NEW),
-            new Task("Задача 5", "Описание 5", TaskStatus.NEW),
-            new Task("Задача 6", "Описание 6", TaskStatus.NEW),
-            new Task("Задача 7", "Описание 7", TaskStatus.NEW),
-            new Task("Задача 8", "Описание 8", TaskStatus.NEW),
-            new Task("Задача 9", "Описание 9", TaskStatus.NEW),
-            new Task("Задача 10", "Описание 10", TaskStatus.NEW),
-            new Task("Задача 11", "Описание 11", TaskStatus.NEW)
-        };
-
-        for (Task task : arrayTasks) {
-            taskManager.addTask(task);
-            taskManager.getTaskById(task.getId());
-        }
-
-        List<Task> history = taskManager.getHistory();
-
-        Assertions.assertEquals(10, history.size(), "Не верное количество записей в истории");
-    }
-
-    @Test
     void tasksEqualsById() {
         Task task1 = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
         Task task2 = new Task("Задача 2", "Описание 2", TaskStatus.IN_PROGRESS);
@@ -207,5 +164,44 @@ class TaskManagerTest {
 
         TaskHistoryManager history = Managers.getDefaultHistory();
         Assertions.assertInstanceOf(TaskHistoryManager.class, history, "Менеджер истории задач имеет не корректный интерфейс");
+    }
+
+    @Test
+    void subTaskShouldUpdateId() {
+        Epic epic1 = new Epic("Эпик 1", "Описание 1");
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1);
+
+        epic1.addSubTask(subTask1);
+
+        taskManager.addEpic(epic1);
+        taskManager.addSubTask(subTask1);
+
+        int subTaskId = subTask1.getId();
+
+        taskManager.removeSubTaskById(subTaskId);
+
+        epic1.addSubTask(subTask1);
+        taskManager.addSubTask(subTask1);
+
+        Assertions.assertNotEquals(subTaskId, subTask1.getId(), "ID подзадачи не изменился!");
+    }
+
+    @Test
+    void shouldNotUpdateFieldsByDirectSetters() {
+        Epic epic1 = new Epic("Эпик 1", "Описание 1");
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1);
+
+        epic1.addSubTask(subTask1);
+
+        taskManager.addEpic(epic1);
+        taskManager.addSubTask(subTask1);
+
+        epic1.setStatus(TaskStatus.IN_PROGRESS);
+
+        Assertions.assertEquals(
+            epic1.getStatus(),
+            TaskStatus.NEW,
+            "Статус эпика изменился после вызова сеттера напрямую!"
+        );
     }
 }
