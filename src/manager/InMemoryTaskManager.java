@@ -22,19 +22,19 @@ public class InMemoryTaskManager implements TaskManager {
     /**
      * Список обычных задач
      */
-    final private Map<Integer, Task> taskList = new HashMap<>();
+    final protected Map<Integer, Task> taskList = new HashMap<>();
 
     /**
      * Список подзадач
      */
-    final private Map<Integer, SubTask> subTaskList = new HashMap<>();
+    final protected Map<Integer, SubTask> subTaskList = new HashMap<>();
 
     /**
      * Список эпиков
      */
-    final private Map<Integer, Epic> epicList = new HashMap<>();
+    final protected Map<Integer, Epic> epicList = new HashMap<>();
 
-    final private TaskHistoryManager historyManager;
+    final protected TaskHistoryManager historyManager;
 
     public InMemoryTaskManager(TaskHistoryManager historyManager) {
         this.historyManager = historyManager;
@@ -103,7 +103,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void addSubTask(SubTask subTask) {
-        Epic epic = subTask.getParent();
+        Epic epic = getEpicById(subTask.getParentId());
         subTask.setId(getNextTaskId());
         epic.addSubTask(subTask);
 
@@ -128,7 +128,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateSubTask(SubTask subTask) {
         subTaskList.remove(subTask.getId());
         subTaskList.put(subTask.getId(), subTask);
-        subTask.getParent().updateStatus();
+        Epic epic = getEpicById(subTask.getParentId());
+        epic.updateStatus();
     }
 
     /**
@@ -216,7 +217,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeSubTaskById(Integer id) {
         SubTask subTask = getSubTaskById(id);
-        Epic epic = subTask.getParent();
+        Epic epic = getEpicById(subTask.getParentId());
         epic.removeSubTask(id);
         subTaskList.remove(id);
         historyManager.remove(id);

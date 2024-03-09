@@ -23,27 +23,24 @@ public class Main {
 
         // Создание задач
         Task firstTask = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
+        manager.addTask(firstTask);
 
         Task secondTask = new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS);
-
-        Epic firstEpic = new Epic("Эпик 1", "Описание Эпика 1");
-
-        Epic secondEpic = new Epic("Эпик 2", "Описание Эпика 2");
-
-        SubTask firstSubTask = new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, firstEpic);
-
-        SubTask secondSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, firstEpic);
-
-        SubTask thirtSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, secondEpic);
-
-        manager.addTask(firstTask);
         manager.addTask(secondTask);
 
+        Epic firstEpic = new Epic("Эпик 1", "Описание Эпика 1");
         manager.addEpic(firstEpic);
+
+        Epic secondEpic = new Epic("Эпик 2", "Описание Эпика 2");
+        manager.addEpic(secondEpic);
+
+        SubTask firstSubTask = new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, firstEpic.getId());
         manager.addSubTask(firstSubTask);
+
+        SubTask secondSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, firstEpic.getId());
         manager.addSubTask(secondSubTask);
 
-        manager.addEpic(secondEpic);
+        SubTask thirtSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, secondEpic.getId());
         manager.addSubTask(thirtSubTask);
 
         // печать

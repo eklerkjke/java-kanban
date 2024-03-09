@@ -1,6 +1,7 @@
 package history;
 
 import constans.TaskStatus;
+import exceptions.ManagerSaveException;
 import manager.TaskManager;
 import model.Epic;
 import model.Task;
@@ -23,7 +24,7 @@ class TaskHistoryManagerTest {
     }
 
     @Test
-    void add() {
+    void add() throws ManagerSaveException {
         TaskManager manager = Managers.getDefault();
 
         Task task = new Task("Задача 1", "Описание задачи 1", TaskStatus.NEW);
@@ -41,7 +42,7 @@ class TaskHistoryManagerTest {
     }
 
     @Test
-    void remove() {
+    void remove() throws ManagerSaveException {
         TaskManager manager = Managers.getDefault();
 
         Task task = new Task("Задача 1", "Описание задачи 1", TaskStatus.NEW);
@@ -55,7 +56,7 @@ class TaskHistoryManagerTest {
     }
 
     @Test
-    void getHistory() {
+    void getHistory() throws ManagerSaveException {
         Task task1 = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
         Task task2 = new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS);
         Epic epic = new Epic("Эпик 1", "Описание Эпика 1");

@@ -1,6 +1,8 @@
 package model;
 
 import constans.TaskStatus;
+import constans.Type;
+
 import java.util.Objects;
 
 /**
@@ -10,11 +12,11 @@ public class SubTask extends Task {
     /**
      * Родительский эпик, к которому принадлежит подзадача
      */
-    private Epic parent;
+    private final int parentId;
 
-    public SubTask(String name, String description, TaskStatus status, Epic epic) {
+    public SubTask(String name, String description, TaskStatus status, int parentId) {
         super(name, description, status);
-        this.parent = epic;
+        this.parentId = parentId;
     }
 
     /**
@@ -22,29 +24,7 @@ public class SubTask extends Task {
      * @return ID родительского эпика
      */
     public int getParentId() {
-        return parent.getId();
-    }
-
-    /**
-     * Возвращает родительский эпик
-     * @return родительский эпик
-     */
-    public Epic getParent() {
-        return parent;
-    }
-
-    /**
-     * Задает родительский эпик
-     * @param parent родительский эпик
-     */
-    public void setParent(Epic parent) {
-        this.parent = parent;
-    }
-
-    @Override
-    public void setStatus(TaskStatus status) {
-        super.setStatus(status);
-        parent.updateStatus();
+        return parentId;
     }
 
     @Override
@@ -68,12 +48,12 @@ public class SubTask extends Task {
     }
 
     @Override
+    public Type getType() {
+        return Type.SUB_TASK;
+    }
+
+    @Override
     public String toString() {
-        return "Подзача: " +
-                "id эпика='" + getParentId() + '\'' +
-                ", нзвание='" + getName() + '\'' +
-                ", описание='" + getDescription() + '\'' +
-                ", id=" + getId() +
-                ", статус=" + getStatus();
+        return String.join(",", super.toString(), String.valueOf(getParentId()));
     }
 }

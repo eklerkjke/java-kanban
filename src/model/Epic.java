@@ -1,6 +1,8 @@
 package model;
 
 import constans.TaskStatus;
+import constans.Type;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,15 +18,6 @@ public class Epic extends Task {
 
     public Epic(String name, String description) {
         super(name, description, TaskStatus.NEW);
-    }
-
-    @Override
-    public String toString() {
-        return "Эпик: " +
-                "нзвание='" + getName() + '\'' +
-                ", описание='" + getDescription() + '\'' +
-                ", id=" + getId() +
-                ", статус=" + getStatus();
     }
 
     @Override
@@ -86,5 +79,10 @@ public class Epic extends Task {
                 updateStatus();
             }
         }
+    }
+
+    @Override
+    public Type getType() {
+        return Type.EPIC;
     }
 }

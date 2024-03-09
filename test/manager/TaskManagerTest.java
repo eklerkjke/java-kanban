@@ -1,6 +1,7 @@
 package manager;
 
 import constans.TaskStatus;
+import exceptions.ManagerSaveException;
 import history.TaskHistoryManager;
 import model.Epic;
 import model.SubTask;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 class TaskManagerTest {
 
-    private TaskManager taskManager;
+    protected TaskManager taskManager;
 
     @BeforeEach
     void setUpTestManager() {
@@ -25,19 +26,20 @@ class TaskManagerTest {
         TaskManager manager = Managers.getDefault();
 
         Epic firstEpic = new Epic("Эпик 1", "Описание Эпика 1");
-        Epic secondEpic = new Epic("Эпик 2", "Описание Эпика 2");
+        manager.addEpic(firstEpic);
 
-        SubTask thirtSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, secondEpic);
+        Epic secondEpic = new Epic("Эпик 2", "Описание Эпика 2");
+        manager.addEpic(secondEpic);
+
+        SubTask thirtSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, secondEpic.getId());
+        manager.addSubTask(thirtSubTask);
 
         manager.addTask(new Task("Задача 1", "Описание 1", TaskStatus.NEW));
         manager.addTask(new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS));
 
-        manager.addEpic(firstEpic);
-        manager.addSubTask(new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, firstEpic));
-        manager.addSubTask(new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, firstEpic));
+        manager.addSubTask(new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, firstEpic.getId()));
+        manager.addSubTask(new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, firstEpic.getId()));
 
-        manager.addEpic(secondEpic);
-        manager.addSubTask(thirtSubTask);
 
         taskManager = manager;
     }
@@ -65,7 +67,7 @@ class TaskManagerTest {
         Assertions.assertTrue(epic.getId() > 0, "ID нового эпика меньше нуля!");
         Assertions.assertEquals(epic, taskManager.getEpicById(epic.getId()), "Новый эпик не добавился!");
 
-        SubTask subTask = new SubTask("Подзадача тест", "Описание тестовой подзадачи", TaskStatus.NEW, epic);
+        SubTask subTask = new SubTask("Подзадача тест", "Описание тестовой подзадачи", TaskStatus.NEW, epic.getId());
         taskManager.addSubTask(subTask);
         Assertions.assertTrue(subTask.getId() > 0, "ID новой подзадачи меньше нуля!");
         Assertions.assertEquals(subTask, taskManager.getSubTaskById(subTask.getId()), "Новая подзадача не добавлена!");
@@ -139,8 +141,8 @@ class TaskManagerTest {
 
         Assertions.assertEquals(epic1, epic2, "Эпики с одинаковым ID не равны");
 
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1);
-        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.DONE, epic1);
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.DONE, epic1.getId());
 
         subTask1.setId(1);
         subTask2.setId(1);
@@ -150,15 +152,15 @@ class TaskManagerTest {
     @Test
     void epicShouldNotAddedAsSubTask() {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1);
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
 
-        taskManager.addSubTask(subTask1);
+        Assertions.assertThrows(NullPointerException.class, () -> taskManager.addSubTask(subTask1));
 
         Assertions.assertNull(taskManager.getEpicById(epic1.getId()), "Нельзя добавить подзадачу без добавленного эпика");
     }
 
     @Test
-    void checkManagersClasses() {
+    void checkManagersClasses() throws ManagerSaveException {
         TaskManager manager = Managers.getDefault();
         Assertions.assertInstanceOf(TaskManager.class, manager, "Менеджер задач имеет не корректный интерфейс");
 
@@ -169,11 +171,11 @@ class TaskManagerTest {
     @Test
     void subTaskShouldUpdateId() {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1);
+        taskManager.addEpic(epic1);
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
 
         epic1.addSubTask(subTask1);
 
-        taskManager.addEpic(epic1);
         taskManager.addSubTask(subTask1);
 
         int subTaskId = subTask1.getId();
@@ -189,11 +191,11 @@ class TaskManagerTest {
     @Test
     void shouldNotUpdateFieldsByDirectSetters() {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1);
+        taskManager.addEpic(epic1);
 
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
         epic1.addSubTask(subTask1);
 
-        taskManager.addEpic(epic1);
         taskManager.addSubTask(subTask1);
 
         epic1.setStatus(TaskStatus.IN_PROGRESS);
