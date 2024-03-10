@@ -43,8 +43,8 @@ public class FileBackedTaskManagerTest extends TaskManagerTest {
         File emptyFile = File.createTempFile("empty_tasks", "csv");
         TaskManager extraTaskManager = FileBackedTaskManager.loadFromFile(emptyFile);
 
-        Assertions.assertEquals(0, extraTaskManager.getTaskList().size(), "Список задач должен быть пустым при загрузке из пустого файла");
-        Assertions.assertEquals(0, extraTaskManager.getEpicList().size(), "Список эпиков должен быть пустым при загрузке из пустого файла");
-        Assertions.assertEquals(0, extraTaskManager.getSubTaskList().size(), "Список подзадач должен быть пустым при загрузке из пустого файла");
+        Assertions.assertTrue(extraTaskManager.getTaskList().isEmpty(), "Список задач должен быть пустым при загрузке из пустого файла");
+        Assertions.assertTrue(extraTaskManager.getEpicList().isEmpty(), "Список эпиков должен быть пустым при загрузке из пустого файла");
+        Assertions.assertTrue(extraTaskManager.getSubTaskList().isEmpty(), "Список подзадач должен быть пустым при загрузке из пустого файла");
     }
 }

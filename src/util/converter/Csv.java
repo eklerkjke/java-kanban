@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Csv {
     public static String historyToString(TaskHistoryManager manager) {
-        ArrayList<String> historyId = new ArrayList<>();
+        List<String> historyId = new ArrayList<>();
         for (Task task : manager.getHistory()) {
             historyId.add(String.valueOf(task.getId()));
         }
