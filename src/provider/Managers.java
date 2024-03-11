@@ -1,9 +1,13 @@
 package provider;
 
+import exceptions.ManagerSaveException;
 import history.InMemoryTaskHistoryManager;
 import history.TaskHistoryManager;
-import manager.InMemoryTaskManager;
+import manager.FileBackedTaskManager;
 import manager.TaskManager;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Утилитарный класс для работы с менеджерами
@@ -18,8 +22,9 @@ final public class Managers {
      * Возвращает менеджер задач по умолчанию
      * @return менеджер задач
      */
-    public static TaskManager getDefault() {
-        return new InMemoryTaskManager(getDefaultHistory());
+    public static TaskManager getDefault() throws ManagerSaveException {
+        Path path = Paths.get("src/tasks.csv");
+        return FileBackedTaskManager.loadFromFile(path.toFile());
     }
 
     /**

@@ -1,6 +1,8 @@
 package model;
 
 import constans.TaskStatus;
+import constans.Type;
+
 import java.util.Objects;
 
 /**
@@ -112,7 +114,10 @@ public class Task {
             return true;
         }
 
-        return Objects.equals(name, task.name) && Objects.equals(description, task.description) && status == task.status;
+        return Objects.equals(name, task.name)
+            && Objects.equals(description, task.description)
+            && status == task.status
+            && getType() == task.getType();
     }
 
     @Override
@@ -120,12 +125,19 @@ public class Task {
         return Objects.hash(name, description, id, status);
     }
 
+    public Type getType() {
+        return Type.TASK;
+    }
+
     @Override
     public String toString() {
-        return "Задача: " +
-                "нзвание='" + getName() + '\'' +
-                ", описание='" + getDescription() + '\'' +
-                ", id=" + getId() +
-                ", статус=" + getStatus();
+        return String.join(
+            ",",
+            String.valueOf(getId()),
+            String.valueOf(getType()),
+            getName(),
+            String.valueOf(getStatus()),
+            getDescription()
+        );
     }
 }
