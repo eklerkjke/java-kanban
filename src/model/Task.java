@@ -3,6 +3,8 @@ package model;
 import constans.TaskStatus;
 import constans.Type;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -28,6 +30,10 @@ public class Task {
      * Статус задачи
      */
     protected TaskStatus status;
+
+    protected Duration duration;
+
+    protected LocalDateTime startTime;
 
     public Task(String name, String description, TaskStatus status) {
         this.name = name;
@@ -139,5 +145,29 @@ public class Task {
             String.valueOf(getStatus()),
             getDescription()
         );
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null) {
+            return null;
+        } else {
+            return startTime.plus(duration);
+        }
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 }

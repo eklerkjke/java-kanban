@@ -7,6 +7,7 @@ import model.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import provider.Managers;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,10 +15,20 @@ import java.io.IOException;
 public class FileBackedTaskManagerTest extends TaskManagerTest {
     protected File file;
 
+    @Override
+    protected TaskManager getDefaultTaskManager() {
+        try {
+            file = File.createTempFile("tasks_test", "csv");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return FileBackedTaskManager.loadFromFile(file);
+    }
+
+
     @BeforeEach
-    public void setUpTestFileManager() throws IOException {
-        file = File.createTempFile("tasks_test", "csv");
-        taskManager = FileBackedTaskManager.loadFromFile(file);
+    public void setUpTestManager() {
+        taskManager = getDefaultTaskManager();
     }
 
     @Test

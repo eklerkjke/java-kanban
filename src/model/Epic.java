@@ -3,6 +3,7 @@ package model;
 import constans.TaskStatus;
 import constans.Type;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import java.util.List;
  * Класс, отвечающий за работу эпиков
  */
 public class Epic extends Task {
+
+    private LocalDateTime endTime;
 
     /**
      * Список подзадач
@@ -84,5 +87,14 @@ public class Epic extends Task {
     @Override
     public Type getType() {
         return Type.EPIC;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 }
