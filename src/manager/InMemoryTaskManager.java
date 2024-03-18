@@ -7,8 +7,16 @@ import model.Task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Objects;
+import java.util.NoSuchElementException;
 
 /**
  * Класс отвечающий за работу с задачами
@@ -37,7 +45,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     final protected TaskHistoryManager historyManager;
 
-    private Set<Task> prioritizedTasks;
+    final private Set<Task> prioritizedTasks;
 
     public InMemoryTaskManager(TaskHistoryManager historyManager) {
         this.historyManager = historyManager;
@@ -264,10 +272,12 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeEpicById(Integer id) {
         Epic epic = getEpicById(id);
         removePrioritizedTasks(epic);
-        for (SubTask subTask : epic.getSubTasks()) {
-            removeSubTaskById(subTask.getId());
-            historyManager.remove(subTask.getId());
-        }
+        epic
+                .getSubTasks()
+                .stream()
+                .map(Task::getId)
+                .forEach(historyManager::remove);
+
         epicList.remove(id);
         historyManager.remove(id);
     }
@@ -286,10 +296,17 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void removeTasks() {
-        for (Task task : taskList.values()) {
-            removePrioritizedTasks(task);
-            historyManager.remove(task.getId());
-        }
+        taskList
+                .values()
+                .stream()
+                .forEach(this::removePrioritizedTasks);
+
+        taskList
+                .values()
+                .stream()
+                .map(Task::getId)
+                .forEach(historyManager::remove);
+
         taskList.clear();
     }
 
@@ -298,10 +315,17 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void removeSubTasks() {
-        for (Task task : subTaskList.values()) {
-            removePrioritizedTasks(task);
-            historyManager.remove(task.getId());
-        }
+        subTaskList
+                .values()
+                .stream()
+                .forEach(this::removePrioritizedTasks);
+
+        subTaskList
+                .values()
+                .stream()
+                .map(Task::getId)
+                .forEach(historyManager::remove);
+
         subTaskList.clear();
     }
 
@@ -311,10 +335,17 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeEpics() {
         removeSubTasks();
-        for (Task task : epicList.values()) {
-            removePrioritizedTasks(task);
-            historyManager.remove(task.getId());
-        }
+        epicList
+                .values()
+                .stream()
+                .forEach(this::removePrioritizedTasks);
+
+        epicList
+                .values()
+                .stream()
+                .map(Task::getId)
+                .forEach(historyManager::remove);
+
         epicList.clear();
     }
 
@@ -371,8 +402,8 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setDuration(Duration.between(startTime.get(), endTime));
     }
 
-    public void checkTask(Task task) {
-        Optional<Task> intersectTask = getPrioritizedTasks()
+    private void checkTask(Task task) {
+        getPrioritizedTasks()
             .stream()
             .filter(filterTask -> {
                 LocalDateTime start = filterTask.getStartTime();
@@ -382,16 +413,15 @@ public class InMemoryTaskManager implements TaskManager {
                 LocalDateTime taskEnd = task.getEndTime();
 
                 return (
-                    (taskStart.equals(start) || taskEnd.equals(end))
-                    || taskStart.isAfter(start) && taskEnd.isBefore(end)
-                    || taskStart.isBefore(start) && taskEnd.isAfter(end)
-                    || taskStart.isBefore(start) && taskEnd.isAfter(start)
+                        (taskStart.equals(start) || taskEnd.equals(end))
+                                || taskStart.isAfter(start) && taskEnd.isBefore(end)
+                                || taskStart.isBefore(start) && taskEnd.isAfter(end)
+                                || taskStart.isBefore(start) && taskEnd.isAfter(start)
                 );
             })
-            .findFirst();
-
-        if (intersectTask.isPresent()) {
-            throw new RuntimeException("Ошибка. Время задач пересекается");
-        }
+            .findFirst()
+            .ifPresent((t) -> {
+                throw new RuntimeException("Ошибка. Время задач пересекается");
+            });
     }
 }

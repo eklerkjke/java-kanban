@@ -6,6 +6,7 @@ import constans.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Класс, отвечающий за работу эпиков
@@ -38,10 +39,10 @@ public class Epic extends Task {
             return;
         }
 
-        ArrayList<TaskStatus> statuses = new ArrayList<>();
-        for (SubTask subTask : tasks) {
-            statuses.add(subTask.getStatus());
-        }
+        ArrayList<TaskStatus> statuses = (ArrayList<TaskStatus>) tasks
+                .stream()
+                .map(SubTask::getStatus)
+                .collect(Collectors.toList());
 
         if (!statuses.contains(TaskStatus.IN_PROGRESS)) {
             if (!statuses.contains(TaskStatus.NEW)) {

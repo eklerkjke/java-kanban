@@ -1,6 +1,7 @@
 package manager;
 
 import constans.TaskStatus;
+import exceptions.ManagerSaveException;
 import model.Epic;
 import model.SubTask;
 import model.Task;
@@ -11,6 +12,8 @@ import provider.Managers;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileBackedTaskManagerTest extends TaskManagerTest {
     protected File file;
@@ -57,5 +60,22 @@ public class FileBackedTaskManagerTest extends TaskManagerTest {
         Assertions.assertTrue(extraTaskManager.getTaskList().isEmpty(), "Список задач должен быть пустым при загрузке из пустого файла");
         Assertions.assertTrue(extraTaskManager.getEpicList().isEmpty(), "Список эпиков должен быть пустым при загрузке из пустого файла");
         Assertions.assertTrue(extraTaskManager.getSubTaskList().isEmpty(), "Список подзадач должен быть пустым при загрузке из пустого файла");
+    }
+
+    @Test
+    void shouldThrowWhenLoadNotExistFile() {
+        Assertions.assertThrows(ManagerSaveException.class, () -> {
+            Path path = Paths.get("src/not_exist_file_test.csv");
+            FileBackedTaskManager.loadFromFile(path.toFile());
+        }, "Должно выбрасывать исключение при загрузке с несуществующим файлом");
+    }
+
+    @Test
+    void shouldThrowWhenLoadSaveNotExistFile() {
+        Assertions.assertThrows(ManagerSaveException.class, () -> {
+            FileBackedTaskManager manager = new FileBackedTaskManager(Managers.getDefaultHistory());
+
+            manager.addTask(new Task("Задание 1", "Описание 1", TaskStatus.NEW));
+        }, "Должно выбрасываться исключение при сохранении менеджера без файла");
     }
 }

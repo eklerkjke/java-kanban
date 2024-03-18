@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Класс отвечающий за хранение истории задач
@@ -109,13 +110,11 @@ public class InMemoryTaskHistoryManager implements TaskHistoryManager {
      * @return список истории задач
      */
     public List<Task> getTasks() {
-        List<Task> list = new ArrayList<>();
-
-        for (Map.Entry<Integer, Node<Task>> entry : historyMap.entrySet()) {
-            list.add(entry.getValue().getData());
-        }
-
-        return list;
+        return historyMap
+                .values()
+                .stream()
+                .map(Node::getData)
+                .collect(Collectors.toList());
     }
 
     /**

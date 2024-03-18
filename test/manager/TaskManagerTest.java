@@ -77,6 +77,13 @@ abstract class TaskManagerTest {
     }
 
     @Test
+    void shouldThrowWhenGetSubtaskNotExistEpic() {
+        Assertions.assertThrows(Exception.class, () -> {
+            taskManager.getSubTasksEpic(99999);
+        });
+    }
+
+    @Test
     void updateNewTask() {
         Task task = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
         taskManager.addTask(task);
@@ -241,5 +248,92 @@ abstract class TaskManagerTest {
         Assertions.assertThrows(RuntimeException.class, () -> {
             taskManager.addTask(task2);
         }, "Вторая задача не пересекается по времени с первой");
+    }
+
+
+    @Test
+    void shouldThrowExceptionUpdateTasksWithIntersectTimeStart() {
+        Task task1 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        task1.setStartTime(LocalDateTime.of(2024, Month.MARCH, 16, 15, 20));
+        task1.setDuration(Duration.ofMinutes(40));
+
+        Task task2 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        task2.setStartTime(LocalDateTime.of(2024, Month.MARCH, 16, 16, 0));
+        task2.setDuration(Duration.ofMinutes(20));
+
+        taskManager.addTask(task1);
+
+        Assertions.assertDoesNotThrow(() -> {
+            taskManager.addTask(task2);
+        }, "Вторая задача пересекается по времени с первой");
+
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            task2.setStartTime(LocalDateTime.of(2024, Month.MARCH, 16, 15, 30));
+            taskManager.updateTask(task2);
+        }, "Вторая задача не пересекается по времени с первой при обновлении");
+    }
+
+    @Test
+    void shouldStatusEpicNewWhenSubtasksNew() {
+        Epic epic1 = new Epic("Эпик 1", "Описание 1");
+        taskManager.addEpic(epic1);
+
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, epic1.getId());
+        epic1.addSubTask(subTask1);
+        epic1.addSubTask(subTask2);
+
+        taskManager.addSubTask(subTask1);
+        taskManager.addSubTask(subTask2);
+
+        Assertions.assertEquals(epic1.getStatus(), TaskStatus.NEW, "Статус эпика должен быть NEW");
+    }
+
+    @Test
+    void shouldStatusEpicDoneWhenSubtasksDone() {
+        Epic epic1 = new Epic("Эпик 1", "Описание 1");
+        taskManager.addEpic(epic1);
+
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.DONE, epic1.getId());
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.DONE, epic1.getId());
+        epic1.addSubTask(subTask1);
+        epic1.addSubTask(subTask2);
+
+        taskManager.addSubTask(subTask1);
+        taskManager.addSubTask(subTask2);
+
+        Assertions.assertEquals(epic1.getStatus(), TaskStatus.DONE, "Статус эпика должен быть DONE");
+    }
+
+    @Test
+    void shouldStatusEpicInProgressWhenSubtasksInProgress() {
+        Epic epic1 = new Epic("Эпик 1", "Описание 1");
+        taskManager.addEpic(epic1);
+
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, epic1.getId());
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, epic1.getId());
+        epic1.addSubTask(subTask1);
+        epic1.addSubTask(subTask2);
+
+        taskManager.addSubTask(subTask1);
+        taskManager.addSubTask(subTask2);
+
+        Assertions.assertEquals(epic1.getStatus(), TaskStatus.IN_PROGRESS, "Статус эпика должен быть IN_PROGRESS");
+    }
+
+    @Test
+    void shouldStatusEpicNewWhenSubtasksNewAndDone() {
+        Epic epic1 = new Epic("Эпик 1", "Описание 1");
+        taskManager.addEpic(epic1);
+
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.DONE, epic1.getId());
+        epic1.addSubTask(subTask1);
+        epic1.addSubTask(subTask2);
+
+        taskManager.addSubTask(subTask1);
+        taskManager.addSubTask(subTask2);
+
+        Assertions.assertEquals(epic1.getStatus(), TaskStatus.NEW, "Статус эпика должен быть NEW");
     }
 }
