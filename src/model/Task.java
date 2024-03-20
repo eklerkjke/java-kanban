@@ -40,7 +40,7 @@ public class Task {
         this.description = description;
         this.status = status;
     }
-    
+
     /**
      * Возвращает название задачи
      * @return название задачи
