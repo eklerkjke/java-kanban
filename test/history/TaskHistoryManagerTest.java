@@ -2,6 +2,7 @@ package history;
 
 import constans.TaskStatus;
 import exceptions.ManagerSaveException;
+import manager.FileBackedTaskManager;
 import manager.TaskManager;
 import model.Epic;
 import model.Task;
@@ -10,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import provider.Managers;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,12 +59,13 @@ class TaskHistoryManagerTest {
     }
 
     @Test
-    void getHistory() throws ManagerSaveException {
+    void getHistory() throws ManagerSaveException, IOException {
+        File file = File.createTempFile("tasks_test", "csv");
+        TaskManager taskManager = FileBackedTaskManager.loadFromFile(file);
+
         Task task1 = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
         Task task2 = new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS);
         Epic epic = new Epic("Эпик 1", "Описание Эпика 1");
-
-        TaskManager taskManager = Managers.getDefault();
 
         taskManager.addTask(task1);
         taskManager.addTask(task2);

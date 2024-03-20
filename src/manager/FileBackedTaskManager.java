@@ -8,7 +8,12 @@ import model.Task;
 import provider.Managers;
 import util.converter.Csv;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,31 +47,32 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 arLines.remove(arLines.size() - 1);
             }
 
-            for (String line : arLines) {
-                if (line.isEmpty() || line.equals("\n")) {
-                    continue;
-                }
-
-                Task task = Csv.fromString(line);
-                if (task instanceof Epic) {
-                    self.epicList.put(task.getId(), (Epic) task);
-                } else if (task instanceof SubTask) {
-                    self.subTaskList.put(task.getId(), (SubTask) task);
-                } else {
-                    self.taskList.put(task.getId() ,task);
-                }
-            }
+            arLines
+                    .stream()
+                    .filter(line -> !line.isEmpty() && !line.equals("\n"))
+                    .map(Csv::fromString)
+                    .forEach(task -> {
+                        if (task instanceof Epic) {
+                            self.epicList.put(task.getId(), (Epic) task);
+                        } else if (task instanceof SubTask) {
+                            self.subTaskList.put(task.getId(), (SubTask) task);
+                        } else {
+                            self.taskList.put(task.getId(), task);
+                        }
+                    });
 
             if (!historyIds.isEmpty()) {
-                for (Integer taskId : historyIds) {
-                    if (self.taskList.containsKey(taskId)) {
-                        self.historyManager.add(self, self.getTaskById(taskId));
-                    } else if (self.subTaskList.containsKey(taskId)) {
-                        self.historyManager.add(self, self.getSubTaskById(taskId));
-                    } else if (self.epicList.containsKey(taskId)) {
-                        self.historyManager.add(self, self.getEpicById(taskId));
-                    }
-                }
+                historyIds
+                        .stream()
+                        .forEach(taskId -> {
+                            if (self.taskList.containsKey(taskId)) {
+                                self.historyManager.add(self, self.getTaskById(taskId));
+                            } else if (self.subTaskList.containsKey(taskId)) {
+                                self.historyManager.add(self, self.getSubTaskById(taskId));
+                            } else if (self.epicList.containsKey(taskId)) {
+                                self.historyManager.add(self, self.getEpicById(taskId));
+                            }
+                        });
             }
 
         } catch (IOException exception) {
@@ -96,7 +102,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             br.newLine();
 
             br.write(Csv.historyToString(historyManager));
-        } catch (IOException exception) {
+        } catch (IOException | NullPointerException exception) {
             throw new ManagerSaveException("Ошибка сохранения задач", exception);
         }
     }

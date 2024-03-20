@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 /**
  * Утилитарный класс для работы с менеджерами
  */
-final public class Managers {
+public class Managers {
 
     private Managers() {
 
