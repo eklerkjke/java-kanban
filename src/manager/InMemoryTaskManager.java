@@ -31,21 +31,21 @@ public class InMemoryTaskManager implements TaskManager {
     /**
      * Список обычных задач
      */
-    final protected Map<Integer, Task> taskList = new HashMap<>();
+    protected final Map<Integer, Task> taskList = new HashMap<>();
 
     /**
      * Список подзадач
      */
-    final protected Map<Integer, SubTask> subTaskList = new HashMap<>();
+    protected final Map<Integer, SubTask> subTaskList = new HashMap<>();
 
     /**
      * Список эпиков
      */
-    final protected Map<Integer, Epic> epicList = new HashMap<>();
+    protected final Map<Integer, Epic> epicList = new HashMap<>();
 
-    final protected TaskHistoryManager historyManager;
+    protected final TaskHistoryManager historyManager;
 
-    final private Set<Task> prioritizedTasks;
+    private final Set<Task> prioritizedTasks;
 
     public InMemoryTaskManager(TaskHistoryManager historyManager) {
         this.historyManager = historyManager;
