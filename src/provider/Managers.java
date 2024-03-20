@@ -14,10 +14,6 @@ import java.nio.file.Paths;
  */
 final public class Managers {
 
-    public Managers() {
-
-    }
-
     /**
      * Возвращает менеджер задач по умолчанию
      * @return менеджер задач
