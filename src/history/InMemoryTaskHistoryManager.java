@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class InMemoryTaskHistoryManager implements TaskHistoryManager {
 
-    final Map<Integer, Node<Task>> historyMap = new HashMap<>();
+    protected final Map<Integer, Node<Task>> historyMap = new HashMap<>();
 
     /**
      * Свойство "головы" истории задач
