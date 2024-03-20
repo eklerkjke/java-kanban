@@ -57,7 +57,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         } else if (task instanceof SubTask) {
                             self.subTaskList.put(task.getId(), (SubTask) task);
                         } else {
-                            self.taskList.put(task.getId() ,task);
+                            self.taskList.put(task.getId(), task);
                         }
                     });
 
