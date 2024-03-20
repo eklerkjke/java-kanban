@@ -16,7 +16,7 @@ public class InMemoryTaskHistoryManager implements TaskHistoryManager {
     /**
      * Свойство для хранения задачп
      */
-    final protected Map<Integer, Node<Task>> historyMap = new HashMap<>();
+    private final Map<Integer, Node<Task>> historyMap = new HashMap<>();
 
     /**
      * Свойство "головы" истории задач
