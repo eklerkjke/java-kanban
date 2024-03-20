@@ -14,7 +14,7 @@ import java.nio.file.Paths;
  */
 final public class Managers {
 
-    private Managers() {
+    public Managers() {
 
     }
 
