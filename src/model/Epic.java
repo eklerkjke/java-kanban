@@ -18,7 +18,7 @@ public class Epic extends Task {
     /**
      * Список подзадач
      */
-    final private List<SubTask> subTasks = new ArrayList<>();
+    private final List<SubTask> subTasks = new ArrayList<>();
 
     public Epic(String name, String description) {
         super(name, description, TaskStatus.NEW);
