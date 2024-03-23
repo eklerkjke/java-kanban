@@ -51,7 +51,13 @@ public class Csv {
                 }
                 break;
             case SUB_TASK:
-                task = new SubTask(arTask[2], arTask[4], status, Integer.parseInt(arTask[7]), LocalDateTime.parse(arTask[5]), Duration.parse(arTask[6]));
+                if (arTask.length == 8) {
+                    task = new SubTask(arTask[2], arTask[4], status, Integer.parseInt(arTask[7]), LocalDateTime.parse(arTask[5]), Duration.parse(arTask[6]));
+                } else if (arTask.length == 7) {
+                    task = new SubTask(arTask[2], arTask[4], status, Integer.parseInt(arTask[6]), LocalDateTime.parse(arTask[5]));
+                } else {
+                    task = new SubTask(arTask[2], arTask[4], status, Integer.parseInt(arTask[5]));
+                }
                 break;
             case EPIC:
                 task = new Epic(arTask[2], arTask[4]);
