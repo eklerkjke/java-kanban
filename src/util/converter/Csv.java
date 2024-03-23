@@ -42,7 +42,13 @@ public class Csv {
 
         switch (type) {
             case TASK:
-                task = new Task(arTask[2], arTask[4], status, LocalDateTime.parse(arTask[5]), Duration.parse(arTask[6]));
+                if (arTask.length == 7) {
+                    task = new Task(arTask[2], arTask[4], status, LocalDateTime.parse(arTask[5]), Duration.parse(arTask[6]));
+                } else if (arTask.length == 6) {
+                    task = new Task(arTask[2], arTask[4], status, LocalDateTime.parse(arTask[5]));
+                } else {
+                    task = new Task(arTask[2], arTask[4], status);
+                }
                 break;
             case SUB_TASK:
                 task = new SubTask(arTask[2], arTask[4], status, Integer.parseInt(arTask[7]), LocalDateTime.parse(arTask[5]), Duration.parse(arTask[6]));
