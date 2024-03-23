@@ -98,15 +98,15 @@ public abstract class MainTasksHandler extends BaseHandler {
         }
     }
 
-    abstract protected Type getClassModel();
+    protected abstract Type getClassModel();
 
-    abstract protected void getList(HttpExchange exchange) throws IOException;
+    protected abstract void getList(HttpExchange exchange) throws IOException;
 
-    abstract protected void delete(HttpExchange exchange, int id) throws IOException;
+    protected abstract void delete(HttpExchange exchange, int id) throws IOException;
 
-    abstract protected void getById(HttpExchange exchange, int id) throws IOException;
+    protected abstract void getById(HttpExchange exchange, int id) throws IOException;
 
-    abstract protected void create(HttpExchange exchange, Task task) throws IOException;
+    protected abstract void create(HttpExchange exchange, Task task) throws IOException;
 
-    abstract protected void update(HttpExchange exchange, Task task) throws IOException;
+    protected abstract void update(HttpExchange exchange, Task task) throws IOException;
 }
