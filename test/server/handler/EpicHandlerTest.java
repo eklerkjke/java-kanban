@@ -34,14 +34,11 @@ public class EpicHandlerTest {
 
     protected HttpClient client;
 
-    public EpicHandlerTest() throws IOException {
+    @BeforeEach
+    public void start() throws IOException {
         taskManager = Managers.getDefault();
         taskServer = new HttpTaskServer(taskManager);
         taskServer.setUp();
-    }
-
-    @BeforeEach
-    public void start() {
         client = HttpClient.newHttpClient();
 
         taskManager.removeAll();
@@ -54,7 +51,7 @@ public class EpicHandlerTest {
     }
 
     @Test
-    public void shouldGetSubTasks() throws IOException, InterruptedException {
+    public void shouldGetEpic() throws IOException, InterruptedException {
         Epic epic = new Epic("epic name", "epic descr");
         taskManager.addEpic(epic);
 
@@ -82,7 +79,7 @@ public class EpicHandlerTest {
     }
 
     @Test
-    public void shouldAddSubTasks() throws IOException, InterruptedException {
+    public void shouldAddEpic() throws IOException, InterruptedException {
         Epic epic = new Epic("epic name", "epic descr");
 
         URI url = URI.create(DEFAULT_URL + "epics");
@@ -101,7 +98,7 @@ public class EpicHandlerTest {
     }
 
     @Test
-    public void shouldUpdateTask() throws IOException, InterruptedException {
+    public void shouldUpdateEpic() throws IOException, InterruptedException {
         Epic epic = new Epic("epic name", "epic descr");
         taskManager.addEpic(epic);
 
@@ -125,7 +122,7 @@ public class EpicHandlerTest {
     }
 
     @Test
-    public void shouldDeleteTask() throws IOException, InterruptedException {
+    public void shouldDeleteEpic() throws IOException, InterruptedException {
         Epic epic = new Epic("epic name", "epic descr");
         taskManager.addEpic(epic);
 

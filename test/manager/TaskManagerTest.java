@@ -35,21 +35,21 @@ abstract class TaskManagerTest {
         Epic secondEpic = new Epic("Эпик 2", "Описание Эпика 2");
         manager.addEpic(secondEpic);
 
-        SubTask thirtSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, secondEpic.getId());
+        SubTask thirtSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, secondEpic.getId(), LocalDateTime.of(2024, 3, 23, 13, 0), Duration.ofMinutes(20));
         manager.addSubTask(thirtSubTask);
 
-        manager.addTask(new Task("Задача 1", "Описание 1", TaskStatus.NEW));
-        manager.addTask(new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS));
+        manager.addTask(new Task("Задача 1", "Описание 1", TaskStatus.NEW, LocalDateTime.of(2024, 3, 15, 12, 0), Duration.ofMinutes(20)));
+        manager.addTask(new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS, LocalDateTime.of(2024, 3, 23, 11, 0), Duration.ofMinutes(20)));
 
-        manager.addSubTask(new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, firstEpic.getId()));
-        manager.addSubTask(new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, firstEpic.getId()));
+        manager.addSubTask(new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, firstEpic.getId(), LocalDateTime.of(2024, 3, 23, 10, 0), Duration.ofMinutes(20)));
+        manager.addSubTask(new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, firstEpic.getId(), LocalDateTime.of(2024, 3, 23, 9, 0), Duration.ofMinutes(20)));
 
         taskManager = manager;
     }
 
     @Test
     void addNewTask() {
-        Task task = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        Task task = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW, LocalDateTime.of(2024, 3, 23, 8, 0), Duration.ofMinutes(20));
         taskManager.addTask(task);
         Assertions.assertTrue(task.getId() > 0, "ID новой задачи меньше нуля!");
         Assertions.assertEquals(task, taskManager.getTaskById(task.getId()), "Новая задача не добавилась!");
@@ -70,7 +70,7 @@ abstract class TaskManagerTest {
         Assertions.assertTrue(epic.getId() > 0, "ID нового эпика меньше нуля!");
         Assertions.assertEquals(epic, taskManager.getEpicById(epic.getId()), "Новый эпик не добавился!");
 
-        SubTask subTask = new SubTask("Подзадача тест", "Описание тестовой подзадачи", TaskStatus.NEW, epic.getId());
+        SubTask subTask = new SubTask("Подзадача тест", "Описание тестовой подзадачи", TaskStatus.NEW, epic.getId(), LocalDateTime.of(2024, 3, 23, 7, 0), Duration.ofMinutes(20));
         taskManager.addSubTask(subTask);
         Assertions.assertTrue(subTask.getId() > 0, "ID новой подзадачи меньше нуля!");
         Assertions.assertEquals(subTask, taskManager.getSubTaskById(subTask.getId()), "Новая подзадача не добавлена!");
@@ -85,7 +85,7 @@ abstract class TaskManagerTest {
 
     @Test
     void updateNewTask() {
-        Task task = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        Task task = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW, LocalDateTime.of(2024, 3, 23, 2, 0), Duration.ofMinutes(20));
         taskManager.addTask(task);
 
         task.setName("Задача Тест Новое название");
@@ -100,7 +100,7 @@ abstract class TaskManagerTest {
 
     @Test
     void createTaskAndGetTaskById() {
-        Task task = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        Task task = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW, LocalDateTime.of(2024, 3, 1, 14, 0), Duration.ofMinutes(20));
         taskManager.addTask(task);
         int taskId = task.getId();
 
@@ -112,7 +112,7 @@ abstract class TaskManagerTest {
 
     @Test
     void removeTaskById() {
-        Task task = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        Task task = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW, LocalDateTime.of(2024, 3, 2, 14, 0), Duration.ofMinutes(20));
         taskManager.addTask(task);
         int taskId = task.getId();
 
@@ -135,8 +135,8 @@ abstract class TaskManagerTest {
 
     @Test
     void tasksEqualsById() {
-        Task task1 = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
-        Task task2 = new Task("Задача 2", "Описание 2", TaskStatus.IN_PROGRESS);
+        Task task1 = new Task("Задача 1", "Описание 1", TaskStatus.NEW, LocalDateTime.of(2024, 3, 3, 14, 0), Duration.ofMinutes(20));
+        Task task2 = new Task("Задача 2", "Описание 2", TaskStatus.IN_PROGRESS, LocalDateTime.of(2024, 3, 4, 14, 0), Duration.ofMinutes(20));
 
         task1.setId(1);
         task2.setId(1);
@@ -151,8 +151,8 @@ abstract class TaskManagerTest {
 
         Assertions.assertEquals(epic1, epic2, "Эпики с одинаковым ID не равны");
 
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
-        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.DONE, epic1.getId());
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId(), LocalDateTime.of(2024, 3, 23, 5, 0), Duration.ofMinutes(20));
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.DONE, epic1.getId(), LocalDateTime.of(2024, 3, 23, 6, 0), Duration.ofMinutes(20));
 
         subTask1.setId(1);
         subTask2.setId(1);
@@ -162,7 +162,7 @@ abstract class TaskManagerTest {
     @Test
     void epicShouldNotAddedAsSubTask() {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId(), LocalDateTime.of(2024, 3, 7, 14, 0), Duration.ofMinutes(20));
 
         Assertions.assertThrows(NullPointerException.class, () -> taskManager.addSubTask(subTask1));
 
@@ -181,7 +181,7 @@ abstract class TaskManagerTest {
     void subTaskShouldUpdateId() {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
         taskManager.addEpic(epic1);
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId(), LocalDateTime.of(2024, 3, 23, 8, 0), Duration.ofMinutes(20));
 
         epic1.addSubTask(subTask1);
 
@@ -202,7 +202,7 @@ abstract class TaskManagerTest {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
         taskManager.addEpic(epic1);
 
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId(), LocalDateTime.of(2024, 3, 9, 14, 0), Duration.ofMinutes(20));
         epic1.addSubTask(subTask1);
 
         taskManager.addSubTask(subTask1);
@@ -218,11 +218,11 @@ abstract class TaskManagerTest {
 
     @Test
     void shouldAddTwoTaskWithDiffTime() {
-        Task task1 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        Task task1 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW, LocalDateTime.of(2024, 3, 10, 14, 0), Duration.ofMinutes(20));
         task1.setStartTime(LocalDateTime.of(2024, Month.MARCH, 16, 15, 20));
         task1.setDuration(Duration.ofMinutes(40));
 
-        Task task2 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        Task task2 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW, LocalDateTime.of(2024, 3, 11, 14, 0), Duration.ofMinutes(20));
         task2.setStartTime(LocalDateTime.of(2024, Month.MARCH, 16, 16, 0));
         task2.setDuration(Duration.ofMinutes(20));
 
@@ -235,11 +235,11 @@ abstract class TaskManagerTest {
 
     @Test
     void shouldThrowExceptionAddTasksWithIntersectTimeStart() {
-        Task task1 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        Task task1 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW, LocalDateTime.of(2024, 3, 12, 14, 0), Duration.ofMinutes(20));
         task1.setStartTime(LocalDateTime.of(2024, Month.MARCH, 16, 15, 20));
         task1.setDuration(Duration.ofMinutes(40));
 
-        Task task2 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        Task task2 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW, LocalDateTime.of(2024, 3, 13, 14, 0), Duration.ofMinutes(20));
         task2.setStartTime(LocalDateTime.of(2024, Month.MARCH, 16, 15, 20));
         task2.setDuration(Duration.ofMinutes(20));
 
@@ -253,11 +253,11 @@ abstract class TaskManagerTest {
 
     @Test
     void shouldThrowExceptionUpdateTasksWithIntersectTimeStart() {
-        Task task1 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        Task task1 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW, LocalDateTime.of(2024, 3, 14, 14, 0), Duration.ofMinutes(20));
         task1.setStartTime(LocalDateTime.of(2024, Month.MARCH, 16, 15, 20));
         task1.setDuration(Duration.ofMinutes(40));
 
-        Task task2 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW);
+        Task task2 = new Task("Задача Тест", "Описание Тестовой задачи", TaskStatus.NEW, LocalDateTime.of(2024, 3, 15, 14, 0), Duration.ofMinutes(20));
         task2.setStartTime(LocalDateTime.of(2024, Month.MARCH, 16, 16, 0));
         task2.setDuration(Duration.ofMinutes(20));
 
@@ -278,8 +278,8 @@ abstract class TaskManagerTest {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
         taskManager.addEpic(epic1);
 
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
-        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, epic1.getId());
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId(), LocalDateTime.of(2024, 3, 16, 14, 0), Duration.ofMinutes(20));
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, epic1.getId(), LocalDateTime.of(2024, 3, 17, 14, 0), Duration.ofMinutes(20));
         epic1.addSubTask(subTask1);
         epic1.addSubTask(subTask2);
 
@@ -294,8 +294,8 @@ abstract class TaskManagerTest {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
         taskManager.addEpic(epic1);
 
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.DONE, epic1.getId());
-        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.DONE, epic1.getId());
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.DONE, epic1.getId(), LocalDateTime.of(2024, 3, 18, 14, 0), Duration.ofMinutes(20));
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.DONE, epic1.getId(), LocalDateTime.of(2024, 4, 23, 14, 0), Duration.ofMinutes(20));
         epic1.addSubTask(subTask1);
         epic1.addSubTask(subTask2);
 
@@ -310,8 +310,8 @@ abstract class TaskManagerTest {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
         taskManager.addEpic(epic1);
 
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, epic1.getId());
-        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, epic1.getId());
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, epic1.getId(), LocalDateTime.of(2024, 5, 23, 14, 0), Duration.ofMinutes(20));
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, epic1.getId(), LocalDateTime.of(2024, 6, 23, 14, 0), Duration.ofMinutes(20));
         epic1.addSubTask(subTask1);
         epic1.addSubTask(subTask2);
 
@@ -326,8 +326,8 @@ abstract class TaskManagerTest {
         Epic epic1 = new Epic("Эпик 1", "Описание 1");
         taskManager.addEpic(epic1);
 
-        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId());
-        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.DONE, epic1.getId());
+        SubTask subTask1 = new SubTask("Подзадача 1", "Описание 1", TaskStatus.NEW, epic1.getId(), LocalDateTime.of(2024, 7, 23, 14, 0), Duration.ofMinutes(20));
+        SubTask subTask2 = new SubTask("Подзадача 2", "Описание 2", TaskStatus.DONE, epic1.getId(), LocalDateTime.of(2024, 8, 23, 14, 0), Duration.ofMinutes(20));
         epic1.addSubTask(subTask1);
         epic1.addSubTask(subTask2);
 

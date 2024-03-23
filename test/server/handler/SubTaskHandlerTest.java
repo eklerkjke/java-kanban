@@ -34,14 +34,13 @@ public class SubTaskHandlerTest {
 
     protected HttpClient client;
 
-    public SubTaskHandlerTest() throws IOException {
+
+    @BeforeEach
+    public void start() throws IOException {
         taskManager = Managers.getDefault();
         taskServer = new HttpTaskServer(taskManager);
         taskServer.setUp();
-    }
 
-    @BeforeEach
-    public void start() {
         client = HttpClient.newHttpClient();
 
         taskManager.removeAll();
@@ -58,9 +57,7 @@ public class SubTaskHandlerTest {
         Epic epic = new Epic("epic name", "epic descr");
         taskManager.addEpic(epic);
 
-        SubTask subTask = new SubTask("task 1", "descr 1", TaskStatus.NEW, epic.getId());
-        subTask.setStartTime(LocalDateTime.of(2024, 3, 23, 14, 5, 0, 0));
-        subTask.setDuration(Duration.ofMinutes(10));
+        SubTask subTask = new SubTask("task 1", "descr 1", TaskStatus.NEW, epic.getId(), LocalDateTime.of(2024, 1, 23, 14, 0), Duration.ofMinutes(20));
         taskManager.addSubTask(subTask);
 
         HttpResponse<String> response;
@@ -91,9 +88,7 @@ public class SubTaskHandlerTest {
         Epic epic = new Epic("epic name", "epic descr");
         taskManager.addEpic(epic);
 
-        SubTask subTask = new SubTask("task 1", "descr 1", TaskStatus.NEW, epic.getId());
-        subTask.setStartTime(LocalDateTime.of(2024, 3, 23, 14, 5, 0, 0));
-        subTask.setDuration(Duration.ofMinutes(10));
+        SubTask subTask = new SubTask("task 1", "descr 1", TaskStatus.NEW, epic.getId(), LocalDateTime.of(2024, 3, 23, 14, 0), Duration.ofMinutes(20));
 
         URI url = URI.create(DEFAULT_URL + "subtasks");
         HttpRequest request = HttpRequest
@@ -111,13 +106,11 @@ public class SubTaskHandlerTest {
     }
 
     @Test
-    public void shouldUpdateTask() throws IOException, InterruptedException {
+    public void shouldUpdateSubTask() throws IOException, InterruptedException {
         Epic epic = new Epic("epic name", "epic descr");
         taskManager.addEpic(epic);
 
-        SubTask subTask = new SubTask("task 1", "descr 1", TaskStatus.NEW, epic.getId());
-        subTask.setStartTime(LocalDateTime.of(2024, 3, 23, 14, 5, 0, 0));
-        subTask.setDuration(Duration.ofMinutes(10));
+        SubTask subTask = new SubTask("task 1", "descr 1", TaskStatus.NEW, epic.getId(), LocalDateTime.of(2024, 3, 23, 14, 0), Duration.ofMinutes(20));
         taskManager.addSubTask(subTask);
 
         subTask.setStatus(TaskStatus.DONE);
@@ -140,13 +133,11 @@ public class SubTaskHandlerTest {
     }
 
     @Test
-    public void shouldDeleteTask() throws IOException, InterruptedException {
+    public void shouldDeleteSubTask() throws IOException, InterruptedException {
         Epic epic = new Epic("epic name", "epic descr");
         taskManager.addEpic(epic);
 
-        SubTask subTask = new SubTask("task 1", "descr 1", TaskStatus.NEW, epic.getId());
-        subTask.setStartTime(LocalDateTime.of(2024, 3, 23, 14, 5, 0, 0));
-        subTask.setDuration(Duration.ofMinutes(10));
+        SubTask subTask = new SubTask("task 1", "descr 1", TaskStatus.NEW, epic.getId(), LocalDateTime.of(2024, 3, 23, 14, 0), Duration.ofMinutes(20));
         taskManager.addSubTask(subTask);
 
         URI url = URI.create(DEFAULT_URL + "subtasks?id=" + subTask.getId());

@@ -5,6 +5,9 @@ import model.SubTask;
 import model.Task;
 import provider.Managers;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 /**
  * Интрефейс взаимодействия
  */
@@ -22,10 +25,10 @@ public class Main {
         TaskManager manager = Managers.getDefault();
 
         // Создание задач
-        Task firstTask = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
+        Task firstTask = new Task("Задача 1", "Описание 1", TaskStatus.NEW, LocalDateTime.of(2024, 3, 23, 14, 0), Duration.ofMinutes(20));
         manager.addTask(firstTask);
 
-        Task secondTask = new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS);
+        Task secondTask = new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS, LocalDateTime.of(2024, 3, 10, 14, 0), Duration.ofMinutes(20));
         manager.addTask(secondTask);
 
         Epic firstEpic = new Epic("Эпик 1", "Описание Эпика 1");
@@ -34,13 +37,13 @@ public class Main {
         Epic secondEpic = new Epic("Эпик 2", "Описание Эпика 2");
         manager.addEpic(secondEpic);
 
-        SubTask firstSubTask = new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, firstEpic.getId());
+        SubTask firstSubTask = new SubTask("Подзадача 1", "Описание 1", TaskStatus.IN_PROGRESS, firstEpic.getId(), LocalDateTime.of(2024, 2, 23, 14, 0), Duration.ofMinutes(20));
         manager.addSubTask(firstSubTask);
 
-        SubTask secondSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, firstEpic.getId());
+        SubTask secondSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.NEW, firstEpic.getId(), LocalDateTime.of(2024, 3, 23, 4, 0), Duration.ofMinutes(20));
         manager.addSubTask(secondSubTask);
 
-        SubTask thirtSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, secondEpic.getId());
+        SubTask thirtSubTask = new SubTask("Подзадача 2", "Описание 2", TaskStatus.IN_PROGRESS, secondEpic.getId(), LocalDateTime.of(2024, 3, 23, 5, 0), Duration.ofMinutes(20));
         manager.addSubTask(thirtSubTask);
 
         // печать

@@ -32,14 +32,11 @@ public class TaskHandlerTest {
 
     protected HttpClient client;
 
-    public TaskHandlerTest() throws IOException {
+    @BeforeEach
+    public void start() throws IOException {
         taskManager = Managers.getDefault();
         taskServer = new HttpTaskServer(taskManager);
         taskServer.setUp();
-    }
-
-    @BeforeEach
-    public void start() {
         client = HttpClient.newHttpClient();
 
         taskManager.removeAll();
@@ -53,13 +50,9 @@ public class TaskHandlerTest {
 
     @Test
     public void shouldGetTasks() throws IOException, InterruptedException {
-        Task task1 = new Task("task 1", "descr 1", TaskStatus.NEW);
-        task1.setStartTime(LocalDateTime.of(2024, 3, 23, 14, 5, 0, 0));
-        task1.setDuration(Duration.ofMinutes(10));
+        Task task1 = new Task("task 1", "descr 1", TaskStatus.NEW, LocalDateTime.of(2024, 3, 23, 14, 0), Duration.ofMinutes(20));
 
-        Task task2 = new Task("task 2", "descr 2", TaskStatus.IN_PROGRESS);
-        task2.setStartTime(LocalDateTime.of(2024, 3, 24, 14, 0, 0, 0));
-        task2.setDuration(Duration.ofMinutes(15));
+        Task task2 = new Task("task 2", "descr 2", TaskStatus.IN_PROGRESS, LocalDateTime.of(2024, 3, 20, 14, 0), Duration.ofMinutes(20));
 
         taskManager.addTask(task1);
         taskManager.addTask(task2);
@@ -89,9 +82,7 @@ public class TaskHandlerTest {
 
     @Test
     public void shouldAddTasks() throws IOException, InterruptedException {
-        Task task1 = new Task("task 1", "descr 1", TaskStatus.NEW);
-        task1.setStartTime(LocalDateTime.of(2024, 3, 23, 14, 5, 0, 0));
-        task1.setDuration(Duration.ofMinutes(10));
+        Task task1 = new Task("task 1", "descr 1", TaskStatus.NEW, LocalDateTime.of(2024, 3, 23, 14, 0), Duration.ofMinutes(20));
 
         taskManager.addTask(task1);
 
@@ -112,9 +103,7 @@ public class TaskHandlerTest {
 
     @Test
     public void shouldUpdateTask() throws IOException, InterruptedException {
-        Task task1 = new Task("task 1", "descr 1", TaskStatus.NEW);
-        task1.setStartTime(LocalDateTime.of(2024, 3, 23, 14, 5, 0, 0));
-        task1.setDuration(Duration.ofMinutes(10));
+        Task task1 = new Task("task 1", "descr 1", TaskStatus.NEW, LocalDateTime.of(2024, 3, 23, 14, 0), Duration.ofMinutes(20));
 
         taskManager.addTask(task1);
 
@@ -139,9 +128,7 @@ public class TaskHandlerTest {
 
     @Test
     public void shouldDeleteTask() throws IOException, InterruptedException {
-        Task task1 = new Task("task 1", "descr 1", TaskStatus.NEW);
-        task1.setStartTime(LocalDateTime.of(2024, 3, 23, 14, 5, 0, 0));
-        task1.setDuration(Duration.ofMinutes(10));
+        Task task1 = new Task("task 1", "descr 1", TaskStatus.NEW, LocalDateTime.of(2024, 3, 23, 14, 0), Duration.ofMinutes(20));
 
         taskManager.addTask(task1);
 

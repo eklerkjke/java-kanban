@@ -42,10 +42,10 @@ public class Csv {
 
         switch (type) {
             case TASK:
-                task = new Task(arTask[2], arTask[4], status);
+                task = new Task(arTask[2], arTask[4], status, LocalDateTime.parse(arTask[5]), Duration.parse(arTask[6]));
                 break;
             case SUB_TASK:
-                task = new SubTask(arTask[2], arTask[4], status, Integer.parseInt(arTask[5]));
+                task = new SubTask(arTask[2], arTask[4], status, Integer.parseInt(arTask[7]), LocalDateTime.parse(arTask[5]), Duration.parse(arTask[6]));
                 break;
             case EPIC:
                 task = new Epic(arTask[2], arTask[4]);
@@ -56,20 +56,6 @@ public class Csv {
         }
 
         task.setId(id);
-
-        if (arTask.length > 5) {
-            if (!arTask[5].isEmpty()) {
-                LocalDateTime localDateTime = LocalDateTime.parse(arTask[5]);
-                task.setStartTime(localDateTime);
-            }
-
-            if (!arTask[6].isEmpty()) {
-                Duration duration = Duration.parse(arTask[6]);
-                if (duration != null) {
-                    task.setDuration(duration);
-                }
-            }
-        }
 
         return task;
     }
