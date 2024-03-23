@@ -53,11 +53,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     .map(Csv::fromString)
                     .forEach(task -> {
                         if (task instanceof Epic) {
-                            self.epicList.put(task.getId(), (Epic) task);
+                            self.addEpic((Epic) task);
                         } else if (task instanceof SubTask) {
-                            self.subTaskList.put(task.getId(), (SubTask) task);
+                            self.addSubTask((SubTask) task);
                         } else {
-                            self.taskList.put(task.getId(), task);
+                            self.addTask(task);
                         }
                     });
 

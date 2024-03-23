@@ -143,7 +143,9 @@ public class Task {
             String.valueOf(getType()),
             getName(),
             String.valueOf(getStatus()),
-            getDescription()
+            getDescription(),
+            (startTime != null) ? startTime.toString() : "",
+            (duration != null) ? duration.toString() : ""
         );
     }
 

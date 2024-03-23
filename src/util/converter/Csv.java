@@ -7,6 +7,8 @@ import model.Epic;
 import model.SubTask;
 import model.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +56,21 @@ public class Csv {
         }
 
         task.setId(id);
+
+        if (arTask.length > 5) {
+            if (!arTask[5].isEmpty()) {
+                LocalDateTime localDateTime = LocalDateTime.parse(arTask[5]);
+                task.setStartTime(localDateTime);
+            }
+
+            if (!arTask[6].isEmpty()) {
+                Duration duration = Duration.parse(arTask[6]);
+                if (duration != null) {
+                    task.setDuration(duration);
+                }
+            }
+        }
+
         return task;
     }
 }
