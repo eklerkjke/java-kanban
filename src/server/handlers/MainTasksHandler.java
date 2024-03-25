@@ -34,34 +34,35 @@ public abstract class MainTasksHandler extends BaseHandler {
         String method = exchange.getRequestMethod();
 
         if (arPath.length == 2) {
-            if (method.equals("GET")) {
-                getList(exchange);
-                return true;
-            } else if (method.equals("POST")) {
-                Optional<Task> taskOptional = fromBody(exchange);
-                if (taskOptional.isEmpty()) {
-                    response(exchange, error("Не корректный запрос"), 400);
+            switch (method) {
+                case "GET":
+                    getList(exchange);
                     return true;
-                }
 
-                if (taskOptional.get().getId() <= 0) {
-                    create(exchange, taskOptional.get());
-                    return true;
-                } else {
-                    update(exchange, taskOptional.get());
-                    return true;
-                }
-            } else if (method.equals("DELETE")) {
-                int id = getIdFromQuery(exchange.getRequestURI().getQuery());
-                if (id > 0) {
-                    delete(exchange, id);
-                    return true;
-                }
+                case "POST":
+                    Optional<Task> taskOptional = fromBody(exchange);
+                    if (taskOptional.isEmpty()) {
+                        response(exchange, error("Не корректный запрос"), 400);
+                        return true;
+                    }
 
-                return false;
+                    if (taskOptional.get().getId() <= 0) {
+                        create(exchange, taskOptional.get());
+                        return true;
+                    } else {
+                        update(exchange, taskOptional.get());
+                        return true;
+                    }
+
+                case "DELETE":
+                    int id = getIdFromQuery(exchange.getRequestURI().getQuery());
+                    if (id > 0) {
+                        delete(exchange, id);
+                        return true;
+                    } else {
+                        return false;
+                    }
             }
-
-            return false;
         } else if (arPath.length == 3 && method.equals("GET")) {
             int id = Integer.parseInt(arPath[2]);
             getById(exchange, id);
@@ -71,7 +72,7 @@ public abstract class MainTasksHandler extends BaseHandler {
         return false;
     }
 
-    protected static int getIdFromQuery(String query) {
+    protected int getIdFromQuery(String query) {
         String[] queryParams = query.split("&");
 
         for (String param : queryParams) {

@@ -22,13 +22,13 @@ import java.util.List;
 
 public class HistoryHandlerTest {
 
-    protected static final String DEFAULT_URL = "http://localhost:8080/";
+    private static final String DEFAULT_URL = "http://localhost:8080/";
 
-    protected HttpTaskServer taskServer;
+    private HttpTaskServer taskServer;
 
-    protected TaskManager taskManager;
+    private TaskManager taskManager;
 
-    protected HttpClient client;
+    private HttpClient client;
 
     @BeforeEach
     public void start() throws IOException {
