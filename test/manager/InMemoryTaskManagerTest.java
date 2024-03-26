@@ -6,6 +6,6 @@ public class InMemoryTaskManagerTest extends TaskManagerTest {
 
     @Override
     protected TaskManager getDefaultTaskManager() {
-        return Managers.getDefault();
+        return new InMemoryTaskManager(Managers.getDefaultHistory());
     }
 }

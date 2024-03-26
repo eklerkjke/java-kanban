@@ -41,6 +41,21 @@ public class Task {
         this.status = status;
     }
 
+    public Task(String name, String description, TaskStatus status, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+    }
+
+    public Task(String name, String description, TaskStatus status, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
     /**
      * Возвращает название задачи
      * @return название задачи
@@ -143,7 +158,9 @@ public class Task {
             String.valueOf(getType()),
             getName(),
             String.valueOf(getStatus()),
-            getDescription()
+            getDescription(),
+            (startTime != null) ? startTime.toString() : "",
+            (duration != null) ? duration.toString() : ""
         );
     }
 

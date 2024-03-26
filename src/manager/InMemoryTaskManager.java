@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.ManagerSaveException;
 import history.TaskHistoryManager;
 import model.Epic;
 import model.SubTask;
@@ -112,12 +113,9 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void addEpic(Epic epic) {
-        checkTask(epic);
-
         epic.setId(getNextTaskId());
         epicList.put(epic.getId(), epic);
         updateEpicTime(epic);
-        addPrioritizedTasks(epic);
     }
 
     /**
@@ -143,9 +141,9 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void updateTask(Task task) {
+        removePrioritizedTasks(getTaskById(task.getId()));
         checkTask(task);
 
-        taskList.remove(task.getId());
         taskList.put(task.getId(), task);
         addPrioritizedTasks(task);
     }
@@ -156,6 +154,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void updateSubTask(SubTask subTask) {
+        removePrioritizedTasks(getSubTaskById(subTask.getId()));
         checkTask(subTask);
 
         subTaskList.remove(subTask.getId());
@@ -172,12 +171,9 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void updateEpic(Epic epic) {
-        checkTask(epic);
-
         epicList.remove(epic.getId());
         epicList.put(epic.getId(), epic);
         updateEpicTime(epic);
-        addPrioritizedTasks(epic);
     }
 
     /**
@@ -244,7 +240,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void removeTaskById(Integer id) {
-        removePrioritizedTasks(taskList.get(id));
+        removePrioritizedTasks(getTaskById(id));
         taskList.remove(id);
         historyManager.remove(id);
     }
@@ -256,9 +252,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeSubTaskById(Integer id) {
         SubTask subTask = getSubTaskById(id);
+        removePrioritizedTasks(subTask);
         Epic epic = getEpicById(subTask.getParentId());
         epic.removeSubTask(id);
-        removePrioritizedTasks(subTask);
         subTaskList.remove(id);
         historyManager.remove(id);
         updateEpicTime(epic);
@@ -271,7 +267,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeEpicById(Integer id) {
         Epic epic = getEpicById(id);
-        removePrioritizedTasks(epic);
         epic
                 .getSubTasks()
                 .stream()
@@ -335,10 +330,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeEpics() {
         removeSubTasks();
-        epicList
-                .values()
-                .stream()
-                .forEach(this::removePrioritizedTasks);
 
         epicList
                 .values()
@@ -421,7 +412,7 @@ public class InMemoryTaskManager implements TaskManager {
             })
             .findFirst()
             .ifPresent((t) -> {
-                throw new RuntimeException("Ошибка. Время задач пересекается");
+                throw new ManagerSaveException("Ошибка. Время задач пересекается", null);
             });
     }
 }

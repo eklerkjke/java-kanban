@@ -6,6 +6,7 @@ import constans.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -21,7 +22,7 @@ public class Epic extends Task {
     private final List<SubTask> subTasks = new ArrayList<>();
 
     public Epic(String name, String description) {
-        super(name, description, TaskStatus.NEW);
+        super(name, description, TaskStatus.NEW, null, null);
     }
 
     @Override
@@ -77,12 +78,12 @@ public class Epic extends Task {
      * @param subTaskId ID подзадачи
      */
     public void removeSubTask(int subTaskId) {
-        for (SubTask task : getSubTasks()) {
-            if (task.getId() == subTaskId) {
-                subTasks.remove(task);
-                updateStatus();
-            }
-        }
+        Optional<SubTask> subTask = getSubTasks()
+                .stream()
+                .filter(t -> t.getId() == subTaskId)
+                .findFirst();
+
+        subTask.ifPresent(subTasks::remove);
     }
 
     @Override

@@ -13,6 +13,8 @@ import provider.Managers;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +32,7 @@ class TaskHistoryManagerTest {
     void add() throws ManagerSaveException {
         TaskManager manager = Managers.getDefault();
 
-        Task task = new Task("Задача 1", "Описание задачи 1", TaskStatus.NEW);
+        Task task = new Task("Задача 1", "Описание задачи 1", TaskStatus.NEW, LocalDateTime.of(2024, 1, 23, 14, 0), Duration.ofMinutes(20));
         task.setId(1);
 
         historyManager.add(
@@ -48,7 +50,7 @@ class TaskHistoryManagerTest {
     void remove() throws ManagerSaveException {
         TaskManager manager = Managers.getDefault();
 
-        Task task = new Task("Задача 1", "Описание задачи 1", TaskStatus.NEW);
+        Task task = new Task("Задача 1", "Описание задачи 1", TaskStatus.NEW, LocalDateTime.of(2024, 2, 23, 14, 0), Duration.ofMinutes(20));
 
         historyManager.add(manager, task);
         historyManager.remove(task.getId());
@@ -63,8 +65,8 @@ class TaskHistoryManagerTest {
         File file = File.createTempFile("tasks_test", "csv");
         TaskManager taskManager = FileBackedTaskManager.loadFromFile(file);
 
-        Task task1 = new Task("Задача 1", "Описание 1", TaskStatus.NEW);
-        Task task2 = new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS);
+        Task task1 = new Task("Задача 1", "Описание 1", TaskStatus.NEW, LocalDateTime.of(2024, 3, 2, 11, 0), Duration.ofMinutes(20));
+        Task task2 = new Task("Задача 2", "Задача 2", TaskStatus.IN_PROGRESS, LocalDateTime.of(2024, 2, 4, 14, 0), Duration.ofMinutes(20));
         Epic epic = new Epic("Эпик 1", "Описание Эпика 1");
 
         taskManager.addTask(task1);

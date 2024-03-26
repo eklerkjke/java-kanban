@@ -3,6 +3,8 @@ package model;
 import constans.TaskStatus;
 import constans.Type;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -16,6 +18,16 @@ public class SubTask extends Task {
 
     public SubTask(String name, String description, TaskStatus status, int parentId) {
         super(name, description, status);
+        this.parentId = parentId;
+    }
+
+    public SubTask(String name, String description, TaskStatus status, int parentId, LocalDateTime startTime) {
+        super(name, description, status, startTime);
+        this.parentId = parentId;
+    }
+
+    public SubTask(String name, String description, TaskStatus status, int parentId, LocalDateTime startTime, Duration duration) {
+        super(name, description, status, startTime, duration);
         this.parentId = parentId;
     }
 
